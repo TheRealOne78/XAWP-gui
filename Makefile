@@ -1,6 +1,6 @@
-LDFLAGS = -lconfig
+LDFLAGS = -lconfig $(shell pkg-config --libs gtk+-3.0)
 CC = gcc
-CFLAGS = -O2
+CFLAGS = -O2 $(shell pkg-config --cflags gtk+-3.0)
 SRC = ./src/*.c
 BIN = xawp-gui
 BUILD_DIR = ./build/
