@@ -1,6 +1,7 @@
 #!/bin/bash
 
 RED="\e[31m"
+GREEN="\e[32m"
 YELLOW="\e[33m"
 BLUE="\e[34m"
 ENDCOLOR="\e[0m"
@@ -20,14 +21,14 @@ PKG_MGR=""          # The package manager that will install the dependencies
 WILL_INSTALL=false  # Check if anything will be installed, else skip
 
 # List of dependencies
-# Common Linux: gcc make libconfig
-# Debian:       gcc make libconfig-dev
-# RHEL:         gcc make libconfig-devel
-# BSD:          gcc gmake libconfig"
+# Common Linux: gcc make libconfig *TODO: add gtk
+# Debian:       gcc make libconfig-dev libgtk-3-dev
+# RHEL:         gcc make libconfig-devel *TODO: add gtk
+# BSD:          gcc gmake libconfig" *TODO: add gtk
 
 # Checking existing dependencies
 if [ ! -x "$(command -v gcc)" ]; then
-  printf "$INFO gcc not detected, adding it in the dependencies install queue\n"
+  printf "$INFO ${GREEN}gcc${ENDCOLOR} not detected, adding it in the dependencies install queue\n"
   DEPENDENCIES="$DEPENDENCIES gcc"
   DEB_DEPENDENCIES="$DEB_DEPENDENCIES gcc"
   RPM_DEPENDENCIES="$RPM_DEPENDENCIES gcc"
@@ -36,7 +37,7 @@ if [ ! -x "$(command -v gcc)" ]; then
 fi
 
 if [ ! -x "$(command -v make)" ]; then
-  printf "$INFO make not detected, adding it in the dependencies install queue\n"
+  printf "$INFO ${GREEN}make${ENDCOLOR} not detected, adding it in the dependencies install queue\n"
   DEPENDENCIES="$DEPENDENCIES make"
   DEB_DEPENDENCIES="$DEB_DEPENDENCIES make"
   RPM_DEPENDENCIES="$RPM_DEPENDENCIES make"
@@ -45,7 +46,16 @@ if [ ! -x "$(command -v make)" ]; then
 fi
 
 if [ ! -f "/usr/include/libconfig.h" ]; then
-  printf "$INFO libconfig not detected, adding it in the dependencies install queue\n"
+  printf "$INFO ${GREEN}libconfig${ENDCOLOR} not detected, adding it in the dependencies install queue\n"
+  DEPENDENCIES="$DEPENDENCIES libconfig"
+  DEB_DEPENDENCIES="$DEB_DEPENDENCIES libconfig-dev"
+  RPM_DEPENDENCIES="$RPM_DEPENDENCIES libconfig-devel"
+  BSD_DEPENDENCIES="$BSD_DEPENDENCIES libconfig"
+  WILL_INSTALL=true
+fi
+
+if [ ! -f "/usr/include/gtk-3.0/gtk/gtk.h" ]; then
+  printf "$INFO ${GREEN}gtk${ENDCOLOR} not detected, adding it in the dependencies install queue\n"
   DEPENDENCIES="$DEPENDENCIES libconfig"
   DEB_DEPENDENCIES="$DEB_DEPENDENCIES libconfig-dev"
   RPM_DEPENDENCIES="$RPM_DEPENDENCIES libconfig-devel"
