@@ -56,10 +56,10 @@ fi
 
 if [ ! -f "/usr/include/gtk-3.0/gtk/gtk.h" ]; then
   printf "$INFO ${GREEN}gtk${ENDCOLOR} not detected, adding it in the dependencies install queue\n"
-  DEPENDENCIES="$DEPENDENCIES libconfig"
-  DEB_DEPENDENCIES="$DEB_DEPENDENCIES libconfig-dev"
-  RPM_DEPENDENCIES="$RPM_DEPENDENCIES libconfig-devel"
-  BSD_DEPENDENCIES="$BSD_DEPENDENCIES libconfig"
+  DEPENDENCIES="$DEPENDENCIES"
+  DEB_DEPENDENCIES="$DEB_DEPENDENCIES libgtk-3-dev"
+  RPM_DEPENDENCIES="$RPM_DEPENDENCIES"
+  BSD_DEPENDENCIES="$BSD_DEPENDENCIES"
   WILL_INSTALL=true
 fi
 
@@ -83,7 +83,7 @@ if [ $WILL_INSTALL == true ]; then
 
   ### CentOS
   elif [ -x "$(command -v yum)" ]; then
-    printf "$IFNO yum package manager detected\n"
+    printf "$INFO yum package manager detected\n"
     PKG_MGR="yum"
 
   ### Gentoo
