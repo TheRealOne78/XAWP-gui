@@ -118,7 +118,7 @@ $ERR For more info, see https://wiki.gentoo.org/wiki/Emerge and https://wiki.gen
   $ERR Please install$DEPENDENCIES manually and run this file again to compile and install XAWP in your system!\n"
     exit 1
   fi
-  printf "$INFO $PKG_MGR will be used to install the required dependencies\n"
+  printf "$INFO $PKG_MGR will install the required dependencies\n"
   # Install dependencies
   ## Debian
   if [ $PKG_MGR == "apt-get" ]; then
