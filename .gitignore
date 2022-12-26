@@ -1,5 +1,7 @@
 build/
 *.o
 packaging/
+*.ui\~
+*.ui#
 *.glade\~
 *.glade#
