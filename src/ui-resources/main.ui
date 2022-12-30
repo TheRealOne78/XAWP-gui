@@ -17,21 +17,20 @@
     <property name="can-focus">False</property>
     <property name="stock">gtk-add</property>
   </object>
+  <object class="GtkImage" id="icon_open">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="stock">gtk-open</property>
+  </object>
   <object class="GtkImage" id="icon_save">
     <property name="visible">True</property>
     <property name="can-focus">False</property>
     <property name="stock">gtk-save</property>
   </object>
-  <object class="GtkImage" id="icon_select">
-    <property name="visible">True</property>
+  <object class="GtkApplicationWindow" id="window">
+    <property name="width-request">800</property>
+    <property name="height-request">600</property>
     <property name="can-focus">False</property>
-    <property name="stock">gtk-file</property>
-  </object>
-  <object class="GtkWindow" id="window">
-    <property name="name">window</property>
-    <property name="can-focus">False</property>
-    <property name="default-width">800</property>
-    <property name="default-height">500</property>
     <child>
       <!-- n-columns=1 n-rows=3 -->
       <object class="GtkGrid" id="window_grid">
@@ -215,7 +214,7 @@
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <property name="label" translatable="yes">Looks like the history is empty.
-Select or Create '+' a new configuration file to begin</property>
+Select or Create '+' a new configuration file to begin.</property>
                         <property name="justify">center</property>
                         <property name="ellipsize">start</property>
                       </object>
@@ -383,10 +382,11 @@ Select or Create '+' a new configuration file to begin</property>
       <object class="GtkHeaderBar" id="window_headerbar">
         <property name="visible">True</property>
         <property name="can-focus">False</property>
-        <property name="title" translatable="yes">title</property>
-        <property name="subtitle" translatable="yes">subtitle</property>
         <property name="spacing">0</property>
         <property name="show-close-button">True</property>
+        <child type="title">
+          <placeholder/>
+        </child>
         <child>
           <!-- n-columns=1 n-rows=1 -->
           <object class="GtkGrid" id="window_headerbar_grid_workbench">
@@ -506,14 +506,16 @@ Select or Create '+' a new configuration file to begin</property>
               <object class="GtkButtonBox" id="window_headerbar_grid_always_buttonbox">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
-                <property name="layout-style">start</property>
+                <property name="margin-end">5</property>
+                <property name="homogeneous">True</property>
+                <property name="layout-style">expand</property>
                 <child>
                   <object class="GtkButton" id="window_headerbar_grid_always_buttonbox_button_select">
                     <property name="label" translatable="yes">Select</property>
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
                     <property name="receives-default">True</property>
-                    <property name="image">icon_select</property>
+                    <property name="image">icon_open</property>
                   </object>
                   <packing>
                     <property name="expand">True</property>
