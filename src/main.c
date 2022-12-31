@@ -28,6 +28,12 @@
 #include <stdlib.h>
 #include <string.h>
 
+static void activate_select_configuration_file(GtkWidget *widget, gpointer data);
+static void activate_create_configuration_file(GtkWidget *widget, gpointer data);
+static void activate_convert_images(GtkWidget *widget, gpointer data);
+static void activate_clear_history(GtkWidget *widget, gpointer data);
+static void activate_about_info(GtkWidget *widget, gpointer data);
+
 int main(int argc, char **argv) {
   GError *error = NULL;
   GtkBuilder *builder_main;
@@ -92,6 +98,6 @@ int main(int argc, char **argv) {
   /* Connect signal handlers to the constructed widgets. */
   window = gtk_builder_get_object(builder_main, "window");
   g_signal_connect(window, "destroy", G_CALLBACK(gtk_main_quit), NULL);
-
+  gtk_header_bar_set_title(GTK_HEADER_BAR(gtk_builder_get_object(builder_main, "window_headerbar")), "XAWP-gui");
   gtk_main();
 }
