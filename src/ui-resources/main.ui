@@ -27,10 +27,11 @@
     <property name="can-focus">False</property>
     <property name="stock">gtk-save</property>
   </object>
-  <object class="GtkApplicationWindow" id="window">
-    <property name="width-request">800</property>
-    <property name="height-request">600</property>
+  <object class="GtkWindow" id="window">
+    <property name="visible">True</property>
     <property name="can-focus">False</property>
+    <property name="default-width">800</property>
+    <property name="default-height">600</property>
     <child>
       <!-- n-columns=1 n-rows=3 -->
       <object class="GtkGrid" id="window_grid">
@@ -46,7 +47,7 @@
             <property name="hexpand">True</property>
             <property name="vexpand">True</property>
             <child>
-              <object class="GtkSeparator" id="body_separator_mainmenu-workbench">
+              <object class="GtkSeparator" id="body_separator_mainmenu_workbench">
                 <property name="name">body_separator_mainmenu-workbench</property>
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
@@ -84,7 +85,7 @@
                         <property name="orientation">vertical</property>
                         <property name="layout-style">expand</property>
                         <child>
-                          <object class="GtkModelButton" id="mainmenu_buttonmenu_select-configuration-file">
+                          <object class="GtkModelButton" id="mainmenu_buttonmenu_select_configuration_file">
                             <property name="name">mainmenu_buttonmenu_select-configuration-file</property>
                             <property name="visible">True</property>
                             <property name="can-focus">True</property>
@@ -100,7 +101,7 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkModelButton" id="mainmenu_buttonmenu_create-configuration-file">
+                          <object class="GtkModelButton" id="mainmenu_buttonmenu_create_configuration_file">
                             <property name="name">mainmenu_buttonmenu_create-configuration-file</property>
                             <property name="visible">True</property>
                             <property name="can-focus">True</property>
@@ -116,7 +117,7 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkModelButton" id="mainmenu_buttonmenu_convert-to-animated-images">
+                          <object class="GtkModelButton" id="mainmenu_buttonmenu_convert_to_animated_images">
                             <property name="name">mainmenu_buttonmenu_convert-to-animated-images</property>
                             <property name="visible">True</property>
                             <property name="can-focus">True</property>
@@ -132,7 +133,7 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkModelButton" id="mainmenu_buttonmenu_clear-history">
+                          <object class="GtkModelButton" id="mainmenu_buttonmenu_clear_history">
                             <property name="name">mainmenu_buttonmenu_clear-history</property>
                             <property name="visible">True</property>
                             <property name="can-focus">True</property>
@@ -148,7 +149,7 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkModelButton" id="mainmenu_buttonmenu_about-info">
+                          <object class="GtkModelButton" id="mainmenu_buttonmenu_about_info">
                             <property name="name">mainmenu_buttonmenu_about-info</property>
                             <property name="visible">True</property>
                             <property name="can-focus">True</property>
@@ -172,7 +173,7 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkImage" id="menu_main-menu_logo">
+                  <object class="GtkImage" id="menu_main_menu_logo">
                     <property name="name">mainmenu_logo</property>
                     <property name="width-request">250</property>
                     <property name="height-request">66</property>
@@ -208,9 +209,10 @@
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <child>
-                      <object class="GtkLabel" id="workbench_home_stack_empty-history">
+                      <object class="GtkLabel" id="workbench_home_stack_empty_history">
                         <property name="name">workbench_home_stack_empty-history</property>
-                        <property name="width-request">400</property>
+                        <property name="width-request">800</property>
+                        <property name="height-request">600</property>
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <property name="label" translatable="yes">Looks like the history is empty.
@@ -224,7 +226,7 @@ Select or Create '+' a new configuration file to begin.</property>
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkFixed" id="workbench_home_stack_has-history">
+                      <object class="GtkFixed" id="workbench_home_stack_has_history">
                         <property name="name">workbench_home_stack_has-history</property>
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
@@ -349,7 +351,7 @@ Select or Create '+' a new configuration file to begin.</property>
           </packing>
         </child>
         <child>
-          <object class="GtkStatusbar" id="window_grid_bottom_status-bar">
+          <object class="GtkStatusbar" id="window_grid_bottom_status_bar">
             <property name="visible">True</property>
             <property name="can-focus">False</property>
             <property name="margin-left">10</property>
@@ -367,7 +369,7 @@ Select or Create '+' a new configuration file to begin.</property>
           </packing>
         </child>
         <child>
-          <object class="GtkSeparator" id="window_grid_separator_body-statusbar">
+          <object class="GtkSeparator" id="window_grid_separator_body_statusbar">
             <property name="visible">True</property>
             <property name="can-focus">False</property>
           </object>
@@ -468,7 +470,7 @@ Select or Create '+' a new configuration file to begin.</property>
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkButton" id="window_headerbar_grid_stack_1_buttonbox_set-as-default">
+                      <object class="GtkButton" id="window_headerbar_grid_stack_1_buttonbox_set_as_default">
                         <property name="label" translatable="yes">Set as default</property>
                         <property name="visible">True</property>
                         <property name="can-focus">True</property>
