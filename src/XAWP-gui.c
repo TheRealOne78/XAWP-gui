@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 TheRealOne78 <bajcsielias78@gmail.com>
+ * Copyright (C) 2023 TheRealOne78 <bajcsielias78@gmail.com>
  *
  * This file is part of the XAWP project
  *
@@ -28,13 +28,22 @@
 #include <stdlib.h>
 #include <string.h>
 
-static void activate_select_configuration_file(GtkWidget *widget, gpointer data);
-static void activate_create_configuration_file(GtkWidget *widget, gpointer data);
-static void activate_convert_images(GtkWidget *widget, gpointer data);
-static void activate_clear_history(GtkWidget *widget, gpointer data);
-static void activate_about_info(GtkWidget *widget, gpointer data);
+/* XAWP created headers */
+#include "info.h"
+#include "XAWP-gui.h"
 
 int main(int argc, char **argv) {
+  gtk_init(&argc, &argv);
+  GtkApplication *app;
+  int status;
+
+  app = gtk_application_new("net.gui.XAWP", G_APPLICATION_DEFAULT_FLAGS);
+  g_signal_connect(app, "activate", G_CALLBACK(activate), NULL);
+  status = g_application_run(G_APPLICATION(app), argc, argv);
+  g_object_unref(app);
+}
+
+static void activate(GtkApplication *app, gpointer user_data) {
   GError *error = NULL;
   GtkBuilder *builder_main;
   GtkBuilder *builder_about_info;
@@ -43,7 +52,6 @@ int main(int argc, char **argv) {
   GObject *window; /* (GtkWindow) */
   GObject *window_headerbar; /* (GtkHeaderBar) */
 
-  gtk_init(&argc, &argv);
 
   /* Construct a GtkBuilder instance and load our UI description */
   builder_main = gtk_builder_new();
@@ -56,9 +64,14 @@ int main(int argc, char **argv) {
     exit(EXIT_FAILURE);
   }
 
-  /* Connect signal handlers to the constructed widgets. */
+  /* Declare a pointer for each Gtk object */
   window = gtk_builder_get_object(builder_main, "window");
+
+  /* Connect signal handlers to the constructed widgets. */
   g_signal_connect(window, "destroy", G_CALLBACK(gtk_main_quit), NULL);
+
+  /* Do all miscellaneous things for initial setup */
   gtk_header_bar_set_title(GTK_HEADER_BAR(gtk_builder_get_object(builder_main, "window_headerbar")), "XAWP-gui");
+
   gtk_main();
 }
