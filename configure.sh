@@ -21,10 +21,10 @@ PKG_MGR=""          # The package manager that will install the dependencies
 WILL_INSTALL=false  # Check if anything will be installed, else skip
 
 # List of dependencies
-# Common Linux: gcc make libconfig *TODO: add gtk
-# Debian:       gcc make libconfig-dev libgtk-3-dev
-# RHEL:         gcc make libconfig-devel *TODO: add gtk
-# BSD:          gcc gmake libconfig" *TODO: add gtk
+# Common Linux: gcc make libconfig gtk3 glib2
+# Debian:       gcc make libconfig-dev libgtk-3-dev libglib2.0-dev
+# RHEL:         gcc make libconfig-devel gtk3-devel glib2-devel
+# BSD:          gcc gmake libconfig gtk3 devel/glib20
 
 # Checking existing dependencies
 if [ ! -x "$(command -v gcc)" ]; then
@@ -56,10 +56,19 @@ fi
 
 if [ ! -f "/usr/include/gtk-3.0/gtk/gtk.h" ]; then
   printf "$INFO ${GREEN}gtk${ENDCOLOR} not detected, adding it in the dependencies install queue\n"
-  DEPENDENCIES="$DEPENDENCIES"
+  DEPENDENCIES="$DEPENDENCIES gtk3"
   DEB_DEPENDENCIES="$DEB_DEPENDENCIES libgtk-3-dev"
-  RPM_DEPENDENCIES="$RPM_DEPENDENCIES"
-  BSD_DEPENDENCIES="$BSD_DEPENDENCIES"
+  RPM_DEPENDENCIES="$RPM_DEPENDENCIES gtk3-devel"
+  BSD_DEPENDENCIES="$BSD_DEPENDENCIES gtk3"
+  WILL_INSTALL=true
+fi
+
+if [ ! -f "/usr/include/glib-2.0/glib.h" ]; then
+  printf "$INFO ${GREEN}glib${ENDCOLOR} not detected, adding it in the dependencies install queue\n"
+  DEPENDENCIES="$DEPENDENCIES glib2"
+  DEB_DEPENDENCIES="$DEB_DEPENDENCIES libglib2.0-dev"
+  RPM_DEPENDENCIES="$RPM_DEPENDENCIES glib2-devel"
+  BSD_DEPENDENCIES="$BSD_DEPENDENCIES devel/glib20"
   WILL_INSTALL=true
 fi
 
