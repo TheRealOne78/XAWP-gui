@@ -20,6 +20,7 @@
 /* Gtk */
 #include <gtk/gtk.h>
 #include <glib.h>
+#include <gio/gio.h>
 
 /* Config */
 #include <libconfig.h>
