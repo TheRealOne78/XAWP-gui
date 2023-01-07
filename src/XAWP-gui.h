@@ -29,5 +29,5 @@ static void on_create_configuration_file(GtkWidget *widget, gpointer data);
 static void on_convert_images(GtkWidget *widget, gpointer data);
 static void on_clear_history(GtkWidget *widget, gpointer data);
 static void on_about_info(GtkWidget *widget, gpointer data);
-
+static void close_about_dialog(GtkAboutDialog *popup_about_info, gint response_id, gpointer data);
 # endif

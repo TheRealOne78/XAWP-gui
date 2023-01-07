@@ -2,7 +2,7 @@
 <!-- Generated with glade 3.40.0 -->
 <interface>
   <requires lib="gtk+" version="3.24"/>
-  <object class="GtkAboutDialog" id="popup_about-info">
+  <object class="GtkAboutDialog" id="popup_about_info">
     <property name="name">popup_about-info</property>
     <property name="can-focus">False</property>
     <property name="title" translatable="yes">About Info</property>
@@ -18,16 +18,16 @@ Graphical User Interface program.</property>
     <property name="website-label" translatable="yes">Source code - GitHub</property>
     <property name="authors">TheRealOne78 - bajcsielias78@gmail.com
 </property>
-    <property name="logo">logo_250x66.png</property>
+    <property name="logo">../images/logo_250x66.png</property>
     <property name="license-type">gpl-3-0</property>
     <child internal-child="vbox">
-      <object class="GtkBox" id="popup_about-info_internal-vbox">
+      <object class="GtkBox" id="popup_about_info_internal_vbox">
         <property name="name">popup_about-info_internal-vbox</property>
         <property name="can-focus">False</property>
         <property name="orientation">vertical</property>
         <property name="spacing">2</property>
         <child internal-child="action_area">
-          <object class="GtkButtonBox" id="popup_about-info_internal-vbox_action-area">
+          <object class="GtkButtonBox" id="popup_about_info_internal_vbox_action_area">
             <property name="name">popup_about-info_internal-vbox_action-area</property>
             <property name="can-focus">False</property>
             <property name="layout-style">end</property>
