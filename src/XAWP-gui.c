@@ -28,10 +28,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <errno.h>
 
 /* XAWP created headers */
 #include "info.h"
+#include "fancy-text.h"
 #include "XAWP-gui.h"
+
+char default_config_path[PATH_MAX] = DEFAULT_CONFIG_PATH;
 
 int main(int argc, char **argv) {
   gtk_init(&argc, &argv);
@@ -89,11 +95,11 @@ static void activate(GtkApplication *app, gpointer user_data) {
 
   /* Connect signal handlers to the constructed widgets. */
   g_signal_connect(window, "destroy", G_CALLBACK(gtk_main_quit), NULL);
-  g_signal_connect(window_headerbar_grid_always_buttonbox_button_select, "clicked", G_CALLBACK(on_select_configuration_file), NULL);
-  g_signal_connect(window_headerbar_grid_always_buttobox_button_create, "clicked", G_CALLBACK(on_create_configuration_file), NULL);
-  g_signal_connect(mainmenu_buttonmenu_select_configuration_file, "clicked", G_CALLBACK(on_select_configuration_file), NULL);
-  g_signal_connect(mainmenu_buttonmenu_create_configuration_file, "clicked", G_CALLBACK(on_create_configuration_file), NULL);
-  g_signal_connect(mainmenu_buttonmenu_convert_to_animated_images, "clicked", G_CALLBACK(on_convert_images), NULL);
+  g_signal_connect(window_headerbar_grid_always_buttonbox_button_select, "clicked", G_CALLBACK(on_select_configuration_file), window);
+  g_signal_connect(window_headerbar_grid_always_buttobox_button_create, "clicked", G_CALLBACK(on_create_configuration_file), window);
+  g_signal_connect(mainmenu_buttonmenu_select_configuration_file, "clicked", G_CALLBACK(on_select_configuration_file), window);
+  g_signal_connect(mainmenu_buttonmenu_create_configuration_file, "clicked", G_CALLBACK(on_create_configuration_file), window);
+  g_signal_connect(mainmenu_buttonmenu_convert_to_animated_images, "clicked", G_CALLBACK(on_convert_images), window);
   g_signal_connect(mainmenu_buttonmenu_clear_history, "clicked", G_CALLBACK(on_clear_history), NULL);
   g_signal_connect(mainmenu_buttonmenu_about_info, "clicked", G_CALLBACK(on_about_info), popup_about_info);
   g_signal_connect(popup_about_info, "response", G_CALLBACK(close_about_dialog), NULL);
@@ -105,12 +111,83 @@ static void activate(GtkApplication *app, gpointer user_data) {
   gtk_main();
 }
 
+static GtkFileFilter *get_xawp_file_filter() {
+
+  GtkFileFilter *filter = gtk_file_filter_new();
+
+  gtk_file_filter_add_pattern(filter, "*.conf");
+  gtk_file_filter_add_pattern(filter, "*.cfg");
+  gtk_file_filter_add_pattern(filter, "*.config");
+
+  gtk_file_filter_set_name(filter, "XAWP files");
+
+  return filter;
+}
+
 static void on_select_configuration_file(GtkWidget *widget, gpointer data) {
+
+  GObject *window = data;
+  GtkFileChooserNative *nativeChooser;
+  GtkFileChooserAction action = GTK_FILE_CHOOSER_ACTION_OPEN;
+  gint res;
+
+  nativeChooser = gtk_file_chooser_native_new("Open File", GTK_WINDOW(window), action, "_Open", "_Cancel");
+
+  verifyDirectoryPath();
+
+  gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(nativeChooser), default_config_path);
+
+  gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(nativeChooser), get_xawp_file_filter());
+
+  GtkFileFilter *all_files_filter = gtk_file_filter_new();
+  gtk_file_filter_add_pattern(all_files_filter, "*");
+  gtk_file_filter_set_name(all_files_filter, "All files");
+  gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(nativeChooser), all_files_filter);
+
+  res = gtk_native_dialog_run(GTK_NATIVE_DIALOG(nativeChooser));
+  if(res == GTK_RESPONSE_ACCEPT) {
+    char *filename;
+    GtkFileChooser *chooser = GTK_FILE_CHOOSER(nativeChooser);
+    filename = gtk_file_chooser_get_filename(chooser);
+    printf("%s\n", filename);
+    verifyDefaultConfigPath();
+    g_free(filename);
+  }
+
+  g_object_unref(nativeChooser);
 
 //TODO
 }
 
 static void on_create_configuration_file(GtkWidget *widget, gpointer data) {
+
+  GObject *window = data;
+  GtkFileChooserNative *nativeChooser;
+  GtkFileChooser *chooser;
+  GtkFileChooserAction action = GTK_FILE_CHOOSER_ACTION_SAVE;
+  gint res;
+
+  nativeChooser = gtk_file_chooser_native_new("Save File", GTK_WINDOW(window), action, "_Create", "_Cancel");
+  chooser = GTK_FILE_CHOOSER(nativeChooser);
+
+  verifyDirectoryPath();
+  gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(nativeChooser), default_config_path);
+
+  gtk_file_chooser_set_do_overwrite_confirmation(chooser, TRUE);
+
+  gtk_file_chooser_set_current_name(GTK_FILE_CHOOSER(chooser), ".conf");
+
+  res = gtk_native_dialog_run(GTK_NATIVE_DIALOG(nativeChooser));
+  if(res == GTK_RESPONSE_ACCEPT) {
+    char *filename;
+
+    filename = gtk_file_chooser_get_filename(chooser);
+    printf("%s\n", filename);
+    // save_to_file(filename);
+    g_free(filename);
+  }
+
+  g_object_unref(nativeChooser);
 
 //TODO
 }
@@ -127,11 +204,85 @@ static void on_clear_history(GtkWidget *widget, gpointer data) {
 
 static void on_about_info(GtkWidget *widget, gpointer data) {
   GtkAboutDialog *popup_about_info = GTK_ABOUT_DIALOG(data);
-
   gtk_dialog_run(GTK_DIALOG(popup_about_info));
-//TODO
 }
 
 static void close_about_dialog(GtkAboutDialog *popup_about_info, gint response_id, gpointer data) {
   gtk_widget_hide(GTK_WIDGET(popup_about_info));
+}
+
+void verifyDirectoryPath() {
+  if(default_config_path[0] == '~') {
+    char *home_dir = getenv("HOME");
+    if(home_dir != NULL) {
+      size_t home_dir_len = strlen(home_dir);
+      size_t path_len = strlen(default_config_path);
+      if(home_dir_len + path_len < sizeof(default_config_path)) {
+        memmove(default_config_path + home_dir_len, default_config_path + 1, path_len);
+        memcpy(default_config_path, home_dir, home_dir_len);
+      }
+    }
+    else {
+      fprintf(stderr, "You are homeless. Seriously, there is no HOME variable!");
+    }
+  }
+  else return;
+}
+
+void verifyDefaultConfigPath() {
+
+  /*
+   * This function checks and creates directories for the
+   * default config directory through an iteration.
+   *
+   * Thanks to OpenAI's ChatGPT for all the help!
+   */
+
+  verifyDirectoryPath();
+
+  if(access(default_config_path, F_OK) == 0) {
+    /* Default config dir exists */
+    return;
+  }
+
+  else {
+    char tmpStr[PATH_MAX];
+    char *ppath = NULL;
+    size_t len;
+
+    /* Copy default_config_path to tmpStr */
+    snprintf(tmpStr, sizeof(tmpStr), "%s", default_config_path);
+    len = strlen(tmpStr);
+
+    /* If the path ends with '/', replace it with a NULL terminator */
+    if(tmpStr[len - 1] == '/')
+      tmpStr[len - 1] = '\0';
+
+    /* Iterate over all characters.
+     *
+     * If there is a '/', temporarily replace it with a NULL terminator,
+     * create the directory and replace back the '/'.
+     */
+    for(ppath = tmpStr + 1; *ppath; ppath++) {
+      if(*ppath == '/') {
+        *ppath = '\0';
+        if(mkdir(tmpStr, S_IRWXU) != 0) {
+          if(errno != EEXIST) {
+            fprintf(stderr, "Error creating directory '%s': %s\n", tmpStr, strerror(errno));
+            return;
+          }
+        }
+        *ppath = '/';
+      }
+    }
+
+    /* Finally, create the wanted target directory */
+    if(mkdir(tmpStr, S_IRWXU) != 0) {
+      if(errno != EEXIST) {
+        fprintf(stderr, "Error creating directory '%s': %s\n", tmpStr, strerror(errno));
+        return;
+      }
+    }
+
+  }
 }

@@ -20,8 +20,27 @@
 #ifndef __XAWP_GUI_H__
 # define __XAWP_GUI_H__
 
+#ifndef DEFAULT_CONFIG_PATH
+# define DEFAULT_CONFIG_PATH "~/.config/xawp/"
+#endif
+
+/* Get the maximum path size based of
+ * different operating systems. */
+#ifndef PATH_MAX
+  #ifdef __linux__
+    #include <linux/limits.h>
+  #elif BSD
+    #include <limits.h>
+  #elif __APPLE__
+    #include <limits.h>
+  #endif
+#endif
+
 /* Activate Gtk */
-static void activate(GtkApplication *app, gpointer user_data);
+static void activate();
+
+/* File chooser's file filter */
+static GtkFileFilter *get_xawp_file_filter();
 
 /* Callback functions Gtk signals will run */
 static void on_select_configuration_file(GtkWidget *widget, gpointer data);
@@ -30,4 +49,8 @@ static void on_convert_images(GtkWidget *widget, gpointer data);
 static void on_clear_history(GtkWidget *widget, gpointer data);
 static void on_about_info(GtkWidget *widget, gpointer data);
 static void close_about_dialog(GtkAboutDialog *popup_about_info, gint response_id, gpointer data);
+
+void verifyDefaultConfigPath();
+void verifyDirectoryPath();
+
 # endif
