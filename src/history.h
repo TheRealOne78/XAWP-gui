@@ -29,21 +29,24 @@
 #endif
 
 typedef struct XawpHistory {
+  /* The cache file */
+  char *historyFilePath;
+
   /* Number of elements in the linked list */
   uint64_t elementsCount;
 
   /* Path data */
-  char *confPath;
+  char *confFilePath;
   /* pointer to next node */
   struct XawpHistory *next;
 } XawpHistory_t;
 
 /* Getters and setters */
-int history_set_list(char *configPath);
-char* history_get_list(uint8_t index);
+int history_set_list(XawpHistory_t *history, char *configPath);
+int history_get_list(char *dest, XawpHistory_t *history, uint8_t index);
 
 /* Clear history functions */
-int history_clear_all();
-int history_clear_element(uint8_t index);
+int history_clear_all(XawpHistory_t *history);
+int history_clear_element(XawpHistory_t *history, uint8_t index);
 
 #endif

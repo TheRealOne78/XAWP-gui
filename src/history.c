@@ -23,18 +23,30 @@
 #include "fancy-text.h"
 #include "history.h"
 
-int history_set_list(char *configPath) {
+int history_set_list(XawpHistory_t *history, char *configPath) {
+
+  /* This setter function sets a new path at the begining of a XawpHistory_t
+   * type linked list and it's cache file. */
 
 }
 
-char* history_get_list(uint8_t index) {
+int history_get_list(char *dest, XawpHistory_t *history, uint8_t index) {
+
+  /* This getter function gets a path at a specific index of a XawpHistory_t
+   * type linked list and it's cache file. */
 
 }
 
-int history_clear_all() {
+int history_clear_all(XawpHistory_t *history) {
+
+  /* This function clears all the path values inside a XawpHistory_t type
+   * linked list and the text inside it's cache file. */
 
 }
 
-int history_clear_element(uint8_t index) {
+int history_clear_element(XawpHistory_t *history, uint8_t index) {
+
+  /* This setter function clears a specific path value at a specific index of a
+   * XawpHistory_t type linked list and it's text element inside cache file. */
 
 }
