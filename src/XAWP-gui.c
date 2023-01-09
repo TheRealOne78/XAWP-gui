@@ -36,6 +36,7 @@
 #include "info.h"
 #include "fancy-text.h"
 #include "XAWP-gui.h"
+#include "dir-checker.h"
 
 char default_config_path[PATH_MAX] = DEFAULT_CONFIG_PATH;
 
@@ -133,7 +134,7 @@ static void on_select_configuration_file(GtkWidget *widget, gpointer data) {
 
   nativeChooser = gtk_file_chooser_native_new("Open File", GTK_WINDOW(window), action, "_Open", "_Cancel");
 
-  verifyDirectoryPath();
+  verifyDirectoryPath(&default_config_path);
 
   gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(nativeChooser), default_config_path);
 
@@ -150,7 +151,8 @@ static void on_select_configuration_file(GtkWidget *widget, gpointer data) {
     GtkFileChooser *chooser = GTK_FILE_CHOOSER(nativeChooser);
     filename = gtk_file_chooser_get_filename(chooser);
     printf("%s\n", filename);
-    verifyDefaultConfigPath();
+    verifyDirectoryPath(&default_config_path);
+
     g_free(filename);
   }
 
@@ -170,7 +172,8 @@ static void on_create_configuration_file(GtkWidget *widget, gpointer data) {
   nativeChooser = gtk_file_chooser_native_new("Save File", GTK_WINDOW(window), action, "_Create", "_Cancel");
   chooser = GTK_FILE_CHOOSER(nativeChooser);
 
-  verifyDirectoryPath();
+  verifyDirectoryPath(&default_config_path);
+
   gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(nativeChooser), default_config_path);
 
   gtk_file_chooser_set_do_overwrite_confirmation(chooser, TRUE);
@@ -209,80 +212,4 @@ static void on_about_info(GtkWidget *widget, gpointer data) {
 
 static void close_about_dialog(GtkAboutDialog *popup_about_info, gint response_id, gpointer data) {
   gtk_widget_hide(GTK_WIDGET(popup_about_info));
-}
-
-void verifyDirectoryPath() {
-  if(default_config_path[0] == '~') {
-    char *home_dir = getenv("HOME");
-    if(home_dir != NULL) {
-      size_t home_dir_len = strlen(home_dir);
-      size_t path_len = strlen(default_config_path);
-      if(home_dir_len + path_len < sizeof(default_config_path)) {
-        memmove(default_config_path + home_dir_len, default_config_path + 1, path_len);
-        memcpy(default_config_path, home_dir, home_dir_len);
-      }
-    }
-    else {
-      fprintf(stderr, "You are homeless. Seriously, there is no HOME variable!");
-    }
-  }
-  else return;
-}
-
-void verifyDefaultConfigPath() {
-
-  /*
-   * This function checks and creates directories for the
-   * default config directory through an iteration.
-   *
-   * Thanks to OpenAI's ChatGPT for all the help!
-   */
-
-  verifyDirectoryPath();
-
-  if(access(default_config_path, F_OK) == 0) {
-    /* Default config dir exists */
-    return;
-  }
-
-  else {
-    char tmpStr[PATH_MAX];
-    char *ppath = NULL;
-    size_t len;
-
-    /* Copy default_config_path to tmpStr */
-    snprintf(tmpStr, sizeof(tmpStr), "%s", default_config_path);
-    len = strlen(tmpStr);
-
-    /* If the path ends with '/', replace it with a NULL terminator */
-    if(tmpStr[len - 1] == '/')
-      tmpStr[len - 1] = '\0';
-
-    /* Iterate over all characters.
-     *
-     * If there is a '/', temporarily replace it with a NULL terminator,
-     * create the directory and replace back the '/'.
-     */
-    for(ppath = tmpStr + 1; *ppath; ppath++) {
-      if(*ppath == '/') {
-        *ppath = '\0';
-        if(mkdir(tmpStr, S_IRWXU) != 0) {
-          if(errno != EEXIST) {
-            fprintf(stderr, "Error creating directory '%s': %s\n", tmpStr, strerror(errno));
-            return;
-          }
-        }
-        *ppath = '/';
-      }
-    }
-
-    /* Finally, create the wanted target directory */
-    if(mkdir(tmpStr, S_IRWXU) != 0) {
-      if(errno != EEXIST) {
-        fprintf(stderr, "Error creating directory '%s': %s\n", tmpStr, strerror(errno));
-        return;
-      }
-    }
-
-  }
 }

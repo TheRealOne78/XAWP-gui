@@ -17,25 +17,23 @@
  * along with XAWP. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __XAWP_GUI_H__
-# define __XAWP_GUI_H__
+#ifndef __HISTORY_H__
+# define __HISTORY_H__
 
-#ifndef DEFAULT_CONFIG_PATH
-# define DEFAULT_CONFIG_PATH "~/.config/xawp/"
+#ifndef HISTORY_MAX
+# define HISTORY_MAX 50
 #endif
 
-/* Activate Gtk */
-static void activate();
+#ifndef HISTORY_DEFAULT_PATH
+# define HISTORY_DEFAULT_PATH "~/.cache/xawp/history.txt"
+#endif
 
-/* File chooser's file filter */
-static GtkFileFilter *get_xawp_file_filter();
+/* Getters and setters */
+int history_set_list(char *configPath);
+char* history_get_list(uint8_t index);
 
-/* Callback functions Gtk signals will run */
-static void on_select_configuration_file(GtkWidget *widget, gpointer data);
-static void on_create_configuration_file(GtkWidget *widget, gpointer data);
-static void on_convert_images(GtkWidget *widget, gpointer data);
-static void on_clear_history(GtkWidget *widget, gpointer data);
-static void on_about_info(GtkWidget *widget, gpointer data);
-static void close_about_dialog(GtkAboutDialog *popup_about_info, gint response_id, gpointer data);
+/* Clear history functions */
+int history_clear_all();
+int history_clear_element(uint8_t index);
 
-# endif
+#endif
