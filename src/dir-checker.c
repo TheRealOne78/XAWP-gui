@@ -37,6 +37,7 @@ void formatPath(char *path, char formattedPath[PATH_MAX]) {
    *
    * Thanks to OpenAI's ChatGPT for all the help!
    */
+
   if(path[0] == '~') {
     char *homeDir = getenv("HOME");
     if(homeDir != NULL) {
@@ -48,7 +49,7 @@ void formatPath(char *path, char formattedPath[PATH_MAX]) {
       }
     }
     else {
-      fprintf(stderr, "You are homeless. Seriously, there is no HOME variable!");
+      fprintf(stderr, "You are homeless. Seriously, there is no HOME variable: %x\n", homeDir[0]);
     }
   }
   else {
@@ -80,7 +81,7 @@ void verifyDirPath(char path[PATH_MAX]) {
     len = strlen(tmpStr);
 
     /* If the path ends with '/', replace it with a NULL terminator */
-    if (tmpStr[len - 1] == '/')
+    if(tmpStr[len - 1] == '/')
       tmpStr[len - 1] = '\0';
 
     /* Iterate over all characters.
@@ -88,11 +89,11 @@ void verifyDirPath(char path[PATH_MAX]) {
      * If there is a '/', temporarily replace it with a NULL terminator,
      * create the directory and replace back the '/'.
      */
-    for (ppath = tmpStr + 1; *ppath; ppath++) {
-      if (*ppath == '/') {
+    for(ppath = tmpStr + 1; *ppath; ppath++) {
+      if(*ppath == '/') {
         *ppath = '\0';
-        if (mkdir(tmpStr, S_IRWXU) != 0) {
-          if (errno != EEXIST) {
+        if(mkdir(tmpStr, S_IRWXU) != 0) {
+          if(errno != EEXIST) {
             fprintf(stderr, "Error creating directory '%s': %s\n", tmpStr, strerror(errno));
             return;
           }
@@ -102,8 +103,8 @@ void verifyDirPath(char path[PATH_MAX]) {
     }
 
     /* Finally, create the wanted target directory */
-    if (mkdir(tmpStr, S_IRWXU) != 0) {
-      if (errno != EEXIST) {
+    if(mkdir(tmpStr, S_IRWXU) != 0) {
+      if(errno != EEXIST) {
         fprintf(stderr, "Error creating directory '%s': %s\n", tmpStr, strerror(errno));
         return;
       }

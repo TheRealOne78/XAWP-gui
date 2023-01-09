@@ -136,7 +136,7 @@ static void on_select_configuration_file(GtkWidget *widget, gpointer data) {
 
   nativeChooser = gtk_file_chooser_native_new("Open File", GTK_WINDOW(window), action, "_Open", "_Cancel");
 
-  verifyDirPath(&default_config_path);
+  verifyDirPath(default_config_path);
 
   gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(nativeChooser), default_config_path);
 
@@ -153,7 +153,7 @@ static void on_select_configuration_file(GtkWidget *widget, gpointer data) {
     GtkFileChooser *chooser = GTK_FILE_CHOOSER(nativeChooser);
     filename = gtk_file_chooser_get_filename(chooser);
     printf("%s\n", filename);
-    verifyDirPath(&default_config_path);
+    verifyDirPath(default_config_path);
 
     g_free(filename);
   }
@@ -174,7 +174,7 @@ static void on_create_configuration_file(GtkWidget *widget, gpointer data) {
   nativeChooser = gtk_file_chooser_native_new("Save File", GTK_WINDOW(window), action, "_Create", "_Cancel");
   chooser = GTK_FILE_CHOOSER(nativeChooser);
 
-  verifyDirPath(&default_config_path);
+  verifyDirPath(default_config_path);
 
   gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(nativeChooser), default_config_path);
 
