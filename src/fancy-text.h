@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 TheRealOne78 <bajcsielias78@gmail.com>
+ * Copyright (C) 2023 TheRealOne78 <bajcsielias78@gmail.com>
  *
  * This file is part of the XAWP project
  *
@@ -52,7 +52,11 @@
 
 # endif  /* _COLORS_ */
 
-# define DEBUG_TEXT_PUTS KBLU"DEBUG"RST
+/* colored status macros */
+#define DEBUG_TEXT_PUTS  KBLU "DEBUG" RST
+#define INFO_TEXT_PUTS   RST "[" KBLU "i" RST "] " RST // [i]
+#define WARN_TEXT_PUTS   RST "[" KYEL "w" RST "] " RST // [w]
+#define ERR_TEXT_PUTS    RST "[" KRED "e" RST "] " RST // [e]
 
 void puts_logo();
 

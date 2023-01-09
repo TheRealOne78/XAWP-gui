@@ -49,7 +49,7 @@ void formatPath(char *path, char formattedPath[PATH_MAX]) {
       }
     }
     else {
-      fprintf(stderr, "You are homeless. Seriously, there is no HOME variable: %x\n", homeDir[0]);
+      fprintf(stderr, ERR_TEXT_PUTS"You are homeless. Seriously, there is no HOME variable: %x\n", homeDir[0]);
     }
   }
   else {
@@ -94,7 +94,7 @@ void verifyDirPath(char path[PATH_MAX]) {
         *ppath = '\0';
         if(mkdir(tmpStr, S_IRWXU) != 0) {
           if(errno != EEXIST) {
-            fprintf(stderr, "Error creating directory '%s': %s\n", tmpStr, strerror(errno));
+            fprintf(stderr, ERR_TEXT_PUTS"Error creating directory '%s': %s\n", tmpStr, strerror(errno));
             return;
           }
         }
@@ -105,7 +105,7 @@ void verifyDirPath(char path[PATH_MAX]) {
     /* Finally, create the wanted target directory */
     if(mkdir(tmpStr, S_IRWXU) != 0) {
       if(errno != EEXIST) {
-        fprintf(stderr, "Error creating directory '%s': %s\n", tmpStr, strerror(errno));
+        fprintf(stderr, ERR_TEXT_PUTS"Error creating directory '%s': %s\n", tmpStr, strerror(errno));
         return;
       }
     }

@@ -79,7 +79,7 @@ static void activate(GtkApplication *app, gpointer user_data) {
 
   if(gtk_builder_add_from_file(builder_main, "../ui/main.ui", &error) == 0 ||
      gtk_builder_add_from_file(builder_about_info, "../ui/about-info.ui", &error) == 0) {
-    g_printerr("Error loading file: %s\n", error->message);
+    g_printerr(ERR_TEXT_PUTS"Error loading file: %s\n", error->message);
     g_clear_error(&error);
     exit(EXIT_FAILURE);
   }
@@ -152,7 +152,6 @@ static void on_select_configuration_file(GtkWidget *widget, gpointer data) {
     char *filename;
     GtkFileChooser *chooser = GTK_FILE_CHOOSER(nativeChooser);
     filename = gtk_file_chooser_get_filename(chooser);
-    printf("%s\n", filename);
     verifyDirPath(default_config_path);
 
     g_free(filename);
@@ -187,7 +186,6 @@ static void on_create_configuration_file(GtkWidget *widget, gpointer data) {
     char *filename;
 
     filename = gtk_file_chooser_get_filename(chooser);
-    printf("%s\n", filename);
     // save_to_file(filename);
     g_free(filename);
   }
