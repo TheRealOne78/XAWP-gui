@@ -28,18 +28,26 @@
 # define HISTORY_DEFAULT_PATH "~/.cache/xawp/history.txt"
 #endif
 
-typedef struct XawpHistory {
-  /* The cache file */
-  char *historyFilePath;
-
-  /* Number of elements in the linked list */
-  uint64_t elementsCount;
-
+typedef struct XawpHistoryLinkedList_t {
   /* Path data */
-  char *confFilePath;
+  char confFilePath[PATH_MAX];
   /* pointer to next node */
   struct XawpHistory *next;
+} XawpHistoryLinkedList_t;
+
+typedef struct XawpHistory {
+  /* The cache file */
+  char *cacheFilePath;
+
+  /* Number of elements in the linked list */
+  uint64_t configsCount;
+
+  XawpHistoryLinkedList_t linkedList;
 } XawpHistory_t;
+
+int history_init(XawpHistory_t *history, char *cacheFilePath);
+int history_refresh(XawpHistory_t *history);
+int history_unref(XawpHistory_t *history);
 
 /* Getters and setters */
 int history_set_list(XawpHistory_t *history, char *configPath);

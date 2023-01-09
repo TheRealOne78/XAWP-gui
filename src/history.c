@@ -19,9 +19,58 @@
 
 #include <stdio.h>
 #include <stdint.h>
+#include <string.h>
 
 #include "fancy-text.h"
+#include "dir-checker.h"
 #include "history.h"
+
+int history_init(XawpHistory_t *history, char *cacheFilePath) {
+
+  /* This init function initiates everything necessary into XawpHistory_t like
+   * loading the config paths from the cache file into the linked list. */
+
+  /* Copy the location of the cache file directly to the struct */
+  strcpy(history->cacheFilePath, cacheFilePath);
+
+  /* Since there are no configs yet, assign value 0 */
+  history->configsCount = 0;
+
+  FILE *cacheFile = fopen(history->cacheFilePath , "r");
+  if(cacheFile == NULL) {
+    fprintf(stderr, ERR_TEXT_PUTS"Error opening the file %s", history->cacheFilePath);
+    return 1;
+  }
+
+  char *line = NULL;
+  size_t len = 0;
+  ssize_t read;
+
+  /* Now load every config from the cache file into the linked list */
+  while((read = getline(&line, &len, cacheFile)) != -1 &&
+        history->configsCount < 50) {
+    /* TODO: malloc a char and start copying contents of the file variable into
+     * the char variable of the linked list. */
+  }
+
+  fclose(cacheFile);
+
+  return 0;
+}
+
+int history_refresh(XawpHistory_t *history) {
+
+  /* This function refreshes the linked list from the struct to an updated list
+   * of config paths. */
+
+}
+
+int history_unref(XawpHistory_t *history) {
+
+  /* This unreference functions makes sure every byte from the passed struct is
+   * dealocated. Mostly used when cleaning up before exiting. */
+
+}
 
 int history_set_list(XawpHistory_t *history, char *configPath) {
 
