@@ -28,7 +28,7 @@
 #include "fancy-text.h"
 #include "dir-checker.h"
 
-char *formatPath(char path[PATH_MAX]) {
+void formatPath(char *path, char formattedPath[PATH_MAX]) {
 
   /*
    * This function checks if the first character is a '~'.
@@ -37,23 +37,23 @@ char *formatPath(char path[PATH_MAX]) {
    *
    * Thanks to OpenAI's ChatGPT for all the help!
    */
-  fprintf(stdout, "%c\n", path[0]);
   if(path[0] == '~') {
-    char *home_dir = getenv("HOME");
-    if(home_dir != NULL) {
-      size_t home_dir_len = strlen(home_dir);
+    char *homeDir = getenv("HOME");
+    if(homeDir != NULL) {
+      size_t homeDir_len = strlen(homeDir);
       size_t path_len = strlen(path);
-      // if(home_dir_len + path_len < sizeof(path)) {
-      //   memmove(path + home_dir_len, path + 1, path_len);
-      //   memcpy(path, home_dir, home_dir_len);
-      // }
-      // TODO: implement to return
+       if(homeDir_len + path_len < PATH_MAX) {
+         strcpy(formattedPath, homeDir);
+         strcat(formattedPath, path+1);
+      }
     }
     else {
       fprintf(stderr, "You are homeless. Seriously, there is no HOME variable!");
     }
   }
-  else return path;
+  else {
+    strcpy(formattedPath, path);
+  }
 }
 
 void verifyDirPath(char path[PATH_MAX]) {

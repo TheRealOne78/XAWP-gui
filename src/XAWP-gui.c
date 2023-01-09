@@ -38,7 +38,8 @@
 #include "XAWP-gui.h"
 #include "dir-checker.h"
 
-char default_config_path[PATH_MAX] = DEFAULT_CONFIG_PATH;
+/* Where the default config exists. */
+char default_config_path[PATH_MAX];
 
 int main(int argc, char **argv) {
   gtk_init(&argc, &argv);
@@ -108,6 +109,7 @@ static void activate(GtkApplication *app, gpointer user_data) {
   /* Do all miscellaneous things for initial setup */
   gtk_header_bar_set_title(GTK_HEADER_BAR(gtk_builder_get_object(builder_main, "window_headerbar")), "XAWP-gui");
   gtk_window_set_transient_for(GTK_WINDOW(popup_about_info), GTK_WINDOW(window));
+  formatPath(DEFAULT_CONFIG_PATH, default_config_path);
 
   gtk_main();
 }
@@ -134,7 +136,7 @@ static void on_select_configuration_file(GtkWidget *widget, gpointer data) {
 
   nativeChooser = gtk_file_chooser_native_new("Open File", GTK_WINDOW(window), action, "_Open", "_Cancel");
 
-  verifyDirectoryPath(&default_config_path);
+  verifyDirPath(&default_config_path);
 
   gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(nativeChooser), default_config_path);
 
@@ -151,7 +153,7 @@ static void on_select_configuration_file(GtkWidget *widget, gpointer data) {
     GtkFileChooser *chooser = GTK_FILE_CHOOSER(nativeChooser);
     filename = gtk_file_chooser_get_filename(chooser);
     printf("%s\n", filename);
-    verifyDirectoryPath(&default_config_path);
+    verifyDirPath(&default_config_path);
 
     g_free(filename);
   }
@@ -172,7 +174,7 @@ static void on_create_configuration_file(GtkWidget *widget, gpointer data) {
   nativeChooser = gtk_file_chooser_native_new("Save File", GTK_WINDOW(window), action, "_Create", "_Cancel");
   chooser = GTK_FILE_CHOOSER(nativeChooser);
 
-  verifyDirectoryPath(&default_config_path);
+  verifyDirPath(&default_config_path);
 
   gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(nativeChooser), default_config_path);
 

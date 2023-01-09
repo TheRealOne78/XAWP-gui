@@ -32,7 +32,7 @@
   #endif
 #endif
 
-char *formatPath(char path[PATH_MAX]);
+void formatPath(char *path, char *formattedPath);
 void verifyDirPath(char path[PATH_MAX]);
 
 #endif
