@@ -20,6 +20,8 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <string.h>
+#include <stdlib.h>
+#include <libgen.h>
 
 #include "fancy-text.h"
 #include "dir-checker.h"
@@ -29,17 +31,35 @@ int history_init(XawpHistory_t *history, char *cacheFilePath) {
 
   /* This init function initiates everything necessary into XawpHistory_t like
    * loading the config paths from the cache file into the linked list. */
+  /* Check if the path is correct and if it's not, fix it */
+  char historyDefaultPath[PATH_MAX];
+  char historyDefaultDirPath[PATH_MAX];
+  formatPath(cacheFilePath, historyDefaultPath);
+  strcpy(historyDefaultDirPath, historyDefaultPath);
+  verifyDirPath(dirname(historyDefaultDirPath));
+  printf("%s, %s\n", historyDefaultPath, historyDefaultDirPath);
 
   /* Copy the location of the cache file directly to the struct */
-  strcpy(history->cacheFilePath, cacheFilePath);
+  strcpy(history->cacheFilePath, historyDefaultPath);
 
   /* Since there are no configs yet, assign value 0 */
   history->configsCount = 0;
 
   FILE *cacheFile = fopen(history->cacheFilePath , "r");
+
+  /* If there is no file, create one and return */
   if(cacheFile == NULL) {
-    fprintf(stderr, ERR_TEXT_PUTS"Error opening the file %s", history->cacheFilePath);
-    return 1;
+    FILE *cacheFileWrite = fopen(history->cacheFilePath , "w+");
+    if(cacheFileWrite == NULL) {
+      fprintf(stderr, ERR_TEXT_PUTS"Error creating or opening the file %s\n", history->cacheFilePath);
+      return -1;
+    }
+    fputs("", cacheFileWrite);
+    fclose(cacheFileWrite);
+
+    /* Just created a new cache file, so returning since there is no real
+     * meaning to continue loading configs from an empty file */
+    return 0;
   }
 
   char *line = NULL;
@@ -47,10 +67,15 @@ int history_init(XawpHistory_t *history, char *cacheFilePath) {
   ssize_t read;
 
   /* Now load every config from the cache file into the linked list */
+  XawpHistoryLinkedList_t *temp;
   while((read = getline(&line, &len, cacheFile)) != -1 &&
         history->configsCount < 50) {
-    /* TODO: malloc a char and start copying contents of the file variable into
-     * the char variable of the linked list. */
+    temp = (XawpHistoryLinkedList_t* )malloc(sizeof(XawpHistoryLinkedList_t));
+    temp->next = NULL;
+    strcpy(temp->confFilePath, line);
+    if(history->head != NULL)
+      temp->next = history->head;
+    history->head = temp;
   }
 
   fclose(cacheFile);

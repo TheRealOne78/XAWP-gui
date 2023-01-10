@@ -37,9 +37,13 @@
 #include "fancy-text.h"
 #include "XAWP-gui.h"
 #include "dir-checker.h"
+#include "history.h"
 
 /* Where the default config exists. */
 char default_config_path[PATH_MAX];
+
+/* Where every data about history is located at */
+XawpHistory_t history;
 
 int main(int argc, char **argv) {
   gtk_init(&argc, &argv);
@@ -95,7 +99,7 @@ static void activate(GtkApplication *app, gpointer user_data) {
   mainmenu_buttonmenu_about_info = gtk_builder_get_object(builder_main, "mainmenu_buttonmenu_about_info");
   popup_about_info = gtk_builder_get_object(builder_about_info, "popup_about_info");
 
-  /* Connect signal handlers to the constructed widgets. */
+  /* Connect signal handlers to the constructed widgets */
   g_signal_connect(window, "destroy", G_CALLBACK(gtk_main_quit), NULL);
   g_signal_connect(window_headerbar_grid_always_buttonbox_button_select, "clicked", G_CALLBACK(on_select_configuration_file), window);
   g_signal_connect(window_headerbar_grid_always_buttobox_button_create, "clicked", G_CALLBACK(on_create_configuration_file), window);
@@ -110,7 +114,9 @@ static void activate(GtkApplication *app, gpointer user_data) {
   gtk_header_bar_set_title(GTK_HEADER_BAR(gtk_builder_get_object(builder_main, "window_headerbar")), "XAWP-gui");
   gtk_window_set_transient_for(GTK_WINDOW(popup_about_info), GTK_WINDOW(window));
   formatPath(DEFAULT_CONFIG_PATH, default_config_path);
+  history_init(&history, HISTORY_DEFAULT_PATH);
 
+  /* Now run the program */
   gtk_main();
 }
 
