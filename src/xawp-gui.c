@@ -35,7 +35,7 @@
 /* XAWP created headers */
 #include "info.h"
 #include "fancy-text.h"
-#include "XAWP-gui.h"
+#include "xawp-gui.h"
 #include "dir-checker.h"
 #include "history.h"
 
