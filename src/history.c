@@ -54,7 +54,6 @@ int history_init(XawpHistory_t *history, char *cacheFilePath) {
       fprintf(stderr, ERR_TEXT_PUTS"Error creating or opening the file %s\n", history->cacheFilePath);
       return -1;
     }
-    fputs("", cacheFileWrite);
     fclose(cacheFileWrite);
 
     /* Just created a new cache file, so returning since there is no real
