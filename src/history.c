@@ -37,7 +37,6 @@ int history_init(XawpHistory_t *history, char *cacheFilePath) {
   formatPath(cacheFilePath, historyDefaultPath);
   strcpy(historyDefaultDirPath, historyDefaultPath);
   verifyDirPath(dirname(historyDefaultDirPath));
-  printf("%s, %s\n", historyDefaultPath, historyDefaultDirPath);
 
   /* Copy the location of the cache file directly to the struct */
   strcpy(history->cacheFilePath, historyDefaultPath);
