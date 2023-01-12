@@ -33,6 +33,9 @@ static GtkFileFilter *get_xawp_file_filter();
 /* Callback functions Gtk signals will run */
 static void on_select_configuration_file(GtkWidget *widget, gpointer data);
 static void on_create_configuration_file(GtkWidget *widget, gpointer data);
+static void on_config_cancel(GtkWidget *widget, gpointer data);
+static void on_config_save(GtkWidget *widget, gpointer data);
+static void on_config_set_as_default(GtkWidget *widget, gpointer data);
 static void on_convert_images(GtkWidget *widget, gpointer data);
 static void on_clear_history(GtkWidget *widget, gpointer data);
 static void on_about_info(GtkWidget *widget, gpointer data);
