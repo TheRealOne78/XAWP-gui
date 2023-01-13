@@ -82,6 +82,10 @@ static void activate(GApplication *app, gpointer user_data) {
   GObject *mainmenu_buttonmenu_about_info; /* (GtkModelButton) */
 
   /* == Stacks and their childs == */
+  /* Headerbar's stack */
+  GObject *window_headerbar_grid_stack; /* (GtkStack) */
+  GObject *window_headerbar_grid_stack_0_grid; /* (GtkGrid) - child of headerbar stack */
+  GObject *window_headerbar_grid_stack_1_buttonbox; /* (GtkButtonBox) - child of headerbar stack */
   /* Body's workbench stack */
   GObject *body_workbench_stack; /* (GtkStack) */
   GObject *workbench_config_paned; /* (GtkPaned) - child of workbench stack */

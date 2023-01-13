@@ -2,6 +2,12 @@
 <!-- Generated with glade 3.40.0 -->
 <interface>
   <requires lib="gtk+" version="3.24"/>
+  <object class="GtkAdjustment" id="adjustment1">
+    <property name="upper">9999</property>
+    <property name="value">0.07</property>
+    <property name="step-increment">0.01</property>
+    <property name="page-increment">10</property>
+  </object>
   <object class="GtkImage" id="icon_apply">
     <property name="visible">True</property>
     <property name="can-focus">False</property>
@@ -259,10 +265,13 @@ Select or Create '+' a new configuration file to begin.</property>
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkFixed" id="workbench_home_stack_has_history">
-                        <property name="name">workbench_home_stack_has-history</property>
+                      <object class="GtkBox" id="workbench_home_stack_has_history">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
+                        <property name="orientation">vertical</property>
+                        <child>
+                          <placeholder/>
+                        </child>
                       </object>
                       <packing>
                         <property name="name">page1</property>
@@ -295,6 +304,10 @@ Select or Create '+' a new configuration file to begin.</property>
                           <object class="GtkBox" id="config_body_animation_directory_box">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
+                            <property name="margin-start">5</property>
+                            <property name="margin-end">5</property>
+                            <property name="margin-top">2</property>
+                            <property name="margin-bottom">2</property>
                             <child>
                               <object class="GtkLabel" id="config_body_animation_directory_box_label">
                                 <property name="visible">True</property>
@@ -361,6 +374,10 @@ Select or Create '+' a new configuration file to begin.</property>
                           <object class="GtkBox" id="config_body_time_box">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
+                            <property name="margin-start">5</property>
+                            <property name="margin-end">5</property>
+                            <property name="margin-top">2</property>
+                            <property name="margin-bottom">2</property>
                             <child>
                               <object class="GtkLabel" id="config_body_time_box_label">
                                 <property name="visible">True</property>
@@ -374,10 +391,12 @@ Select or Create '+' a new configuration file to begin.</property>
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkEntry" id="config_body_time_box_entry">
+                              <object class="GtkSpinButton">
                                 <property name="visible">True</property>
                                 <property name="can-focus">True</property>
-                                <property name="placeholder-text" translatable="yes">0.07</property>
+                                <property name="adjustment">adjustment1</property>
+                                <property name="digits">2</property>
+                                <property name="value">0.06999999977648258</property>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -396,6 +415,10 @@ Select or Create '+' a new configuration file to begin.</property>
                           <object class="GtkBox" id="config_body_static_wallpaper_box">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
+                            <property name="margin-start">5</property>
+                            <property name="margin-end">5</property>
+                            <property name="margin-top">2</property>
+                            <property name="margin-bottom">2</property>
                             <child>
                               <object class="GtkLabel" id="config_body_static_wallpaper_box_label">
                                 <property name="visible">True</property>
@@ -433,6 +456,10 @@ Select or Create '+' a new configuration file to begin.</property>
                           <object class="GtkBox" id="config_body_directory_path_box">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
+                            <property name="margin-start">5</property>
+                            <property name="margin-end">5</property>
+                            <property name="margin-top">2</property>
+                            <property name="margin-bottom">2</property>
                             <child>
                               <object class="GtkLabel" id="config_body_directory_path_box_label">
                                 <property name="visible">True</property>
@@ -499,6 +526,10 @@ Select or Create '+' a new configuration file to begin.</property>
                           <object class="GtkBox" id="config_body_fit">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
+                            <property name="margin-start">5</property>
+                            <property name="margin-end">5</property>
+                            <property name="margin-top">2</property>
+                            <property name="margin-bottom">2</property>
                             <child>
                               <object class="GtkLabel" id="config_body_fit_label">
                                 <property name="visible">True</property>
@@ -525,6 +556,11 @@ Select or Create '+' a new configuration file to begin.</property>
                                   <item translatable="yes">Bottom-right</item>
                                   <item translatable="yes">Top-right</item>
                                 </items>
+                                <child internal-child="entry">
+                                  <object class="GtkEntry">
+                                    <property name="can-focus">False</property>
+                                  </object>
+                                </child>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -543,6 +579,10 @@ Select or Create '+' a new configuration file to begin.</property>
                           <object class="GtkBox" id="config_body_debug_box">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
+                            <property name="margin-start">5</property>
+                            <property name="margin-end">5</property>
+                            <property name="margin-top">2</property>
+                            <property name="margin-bottom">2</property>
                             <child>
                               <object class="GtkLabel" id="config_body_debug_box_label">
                                 <property name="visible">True</property>
@@ -587,6 +627,9 @@ Select or Create '+' a new configuration file to begin.</property>
                         <property name="name">workbench_config_description_frame</property>
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
+                        <property name="margin-start">2</property>
+                        <property name="margin-top">2</property>
+                        <property name="margin-bottom">2</property>
                         <property name="label-xalign">0</property>
                         <property name="shadow-type">out</property>
                         <child>
@@ -691,34 +734,10 @@ Select or Create '+' a new configuration file to begin.</property>
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
                 <child>
-                  <!-- n-columns=3 n-rows=3 -->
+                  <!-- n-columns=1 n-rows=1 -->
                   <object class="GtkGrid" id="window_headerbar_grid_stack_0_grid">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
-                    <child>
-                      <placeholder/>
-                    </child>
-                    <child>
-                      <placeholder/>
-                    </child>
-                    <child>
-                      <placeholder/>
-                    </child>
-                    <child>
-                      <placeholder/>
-                    </child>
-                    <child>
-                      <placeholder/>
-                    </child>
-                    <child>
-                      <placeholder/>
-                    </child>
-                    <child>
-                      <placeholder/>
-                    </child>
-                    <child>
-                      <placeholder/>
-                    </child>
                     <child>
                       <placeholder/>
                     </child>
@@ -740,6 +759,7 @@ Select or Create '+' a new configuration file to begin.</property>
                         <property name="can-focus">True</property>
                         <property name="receives-default">True</property>
                         <property name="tooltip-text" translatable="yes">Cancel</property>
+                        <property name="hexpand">False</property>
                         <property name="image">icon_cancel</property>
                       </object>
                       <packing>
