@@ -674,7 +674,7 @@ Select or Create '+' a new configuration file to begin.</property>
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkPaned" id="workbench_config_paned1">
+                  <object class="GtkPaned" id="workbench_convert_paned">
                     <property name="name">workbench_config_paned</property>
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
@@ -682,7 +682,7 @@ Select or Create '+' a new configuration file to begin.</property>
                     <property name="vexpand">True</property>
                     <property name="orientation">vertical</property>
                     <child>
-                      <object class="GtkBox" id="workbench_config_body1">
+                      <object class="GtkBox" id="workbench_convert_body">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <property name="margin-left">2</property>
@@ -691,7 +691,7 @@ Select or Create '+' a new configuration file to begin.</property>
                         <property name="margin-end">2</property>
                         <property name="orientation">vertical</property>
                         <child>
-                          <object class="GtkBox" id="config_body_animation_directory_box1">
+                          <object class="GtkBox" id="convert_body_animation_directory_box1">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <property name="margin-left">5</property>
@@ -701,7 +701,7 @@ Select or Create '+' a new configuration file to begin.</property>
                             <property name="margin-top">2</property>
                             <property name="margin-bottom">2</property>
                             <child>
-                              <object class="GtkLabel" id="config_body_animation_directory_box_label1">
+                              <object class="GtkLabel" id="convert_body_animation_file_label">
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
                                 <property name="label" translatable="yes">Animation file </property>
@@ -713,12 +713,12 @@ Select or Create '+' a new configuration file to begin.</property>
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkButtonBox" id="config_body_animation_directory_box_button_box1">
+                              <object class="GtkButtonBox" id="convert_body_animation_directory_box_button_box">
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
                                 <property name="layout-style">expand</property>
                                 <child>
-                                  <object class="GtkEntry" id="config_body_animation_directory_box_button_box_entry1">
+                                  <object class="GtkEntry" id="convert_body_animation_directory_box_button_box_entry">
                                     <property name="visible">True</property>
                                     <property name="can-focus">True</property>
                                     <property name="placeholder-text" translatable="yes">/path/to/animation</property>
@@ -730,12 +730,12 @@ Select or Create '+' a new configuration file to begin.</property>
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkButton" id="config_body_animation_directory_box_button_box_button1">
+                                  <object class="GtkButton" id="convert_body_animation_directory_box_button_box_button">
                                     <property name="visible">True</property>
                                     <property name="can-focus">True</property>
                                     <property name="receives-default">True</property>
                                     <child>
-                                      <object class="GtkImage" id="config_body_animation_directory_box_button_box_button_image_open1">
+                                      <object class="GtkImage" id="convert_body_animation_directory_box_button_box_button_image_open">
                                         <property name="visible">True</property>
                                         <property name="can-focus">False</property>
                                         <property name="stock">gtk-file</property>
@@ -763,7 +763,7 @@ Select or Create '+' a new configuration file to begin.</property>
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkBox" id="config_body_animation_directory_box2">
+                          <object class="GtkBox" id="convert_body_animation_directory_box">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <property name="margin-left">5</property>
@@ -773,7 +773,7 @@ Select or Create '+' a new configuration file to begin.</property>
                             <property name="margin-top">2</property>
                             <property name="margin-bottom">2</property>
                             <child>
-                              <object class="GtkLabel" id="config_body_animation_directory_box_label2">
+                              <object class="GtkLabel" id="convert_body_output_directory_label">
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
                                 <property name="label" translatable="yes">Output directory </property>
@@ -785,12 +785,12 @@ Select or Create '+' a new configuration file to begin.</property>
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkButtonBox" id="config_body_animation_directory_box_button_box2">
+                              <object class="GtkButtonBox" id="convert_body_entry_box_button_box">
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
                                 <property name="layout-style">expand</property>
                                 <child>
-                                  <object class="GtkEntry" id="config_body_animation_directory_box_button_box_entry2">
+                                  <object class="GtkEntry" id="convert_body_entry_box_button_box_box">
                                     <property name="visible">True</property>
                                     <property name="can-focus">True</property>
                                     <property name="placeholder-text" translatable="yes">/path/to/directory</property>
@@ -802,12 +802,12 @@ Select or Create '+' a new configuration file to begin.</property>
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkButton" id="config_body_animation_directory_box_button_box_button2">
+                                  <object class="GtkButton" id="convert_body_entry_box_button_box_box_button">
                                     <property name="visible">True</property>
                                     <property name="can-focus">True</property>
                                     <property name="receives-default">True</property>
                                     <child>
-                                      <object class="GtkImage" id="config_body_animation_directory_box_button_box_button_image_open2">
+                                      <object class="GtkImage" id="convert_body_entry_box_button_box_box_button_image_open">
                                         <property name="visible">True</property>
                                         <property name="can-focus">False</property>
                                         <property name="stock">gtk-open</property>
@@ -835,7 +835,7 @@ Select or Create '+' a new configuration file to begin.</property>
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkBox" id="config_body_animation_directory_box3">
+                          <object class="GtkBox" id="convert_body_frame_range_box">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <property name="margin-left">5</property>
@@ -845,7 +845,7 @@ Select or Create '+' a new configuration file to begin.</property>
                             <property name="margin-top">2</property>
                             <property name="margin-bottom">2</property>
                             <child>
-                              <object class="GtkLabel" id="config_body_animation_directory_box_label3">
+                              <object class="GtkLabel" id="convert_body_frame_range_label">
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
                                 <property name="label" translatable="yes">Frame range </property>
@@ -857,7 +857,7 @@ Select or Create '+' a new configuration file to begin.</property>
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkEntry">
+                              <object class="GtkEntry" id="convert_body_frame_range_start_entry">
                                 <property name="visible">True</property>
                                 <property name="can-focus">True</property>
                                 <property name="halign">center</property>
@@ -870,7 +870,7 @@ Select or Create '+' a new configuration file to begin.</property>
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkLabel">
+                              <object class="GtkLabel" id="convert_body_frame_range_label2">
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
                                 <property name="label" translatable="yes"> - </property>
@@ -882,7 +882,7 @@ Select or Create '+' a new configuration file to begin.</property>
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkEntry">
+                              <object class="GtkEntry" id="convert_body_frame_range_end_entry">
                                 <property name="visible">True</property>
                                 <property name="can-focus">True</property>
                                 <property name="width-chars">5</property>
@@ -907,7 +907,7 @@ Select or Create '+' a new configuration file to begin.</property>
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkFrame" id="workbench_config_description_frame1">
+                      <object class="GtkFrame" id="workbench_convert_description_frame">
                         <property name="name">workbench_config_description_frame</property>
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>

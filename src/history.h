@@ -42,7 +42,7 @@ typedef struct XawpHistory {
   /* Number of elements in the linked list */
   uint64_t configsCount;
 
-  XawpHistoryLinkedList_t *head;// = NULL;
+  XawpHistoryLinkedList_t *head;
 } XawpHistory_t;
 
 int history_init(XawpHistory_t *history, char *cacheFilePath);

@@ -66,23 +66,33 @@ int history_init(XawpHistory_t *history, char *cacheFilePath) {
     return 0;
   }
 
+  /* Now load every config from the cache file into the linked list */
   char *line = NULL;
   size_t len = 0;
   ssize_t read;
 
-  /* Now load every config from the cache file into the linked list */
   XawpHistoryLinkedList_t *temp;
-  while((read = getline(&line, &len, cacheFile)) != -1 &&
-        history->configsCount < 50) {
+  while((read = getline(&line, &len, cacheFile)) != -1) {
+
     temp = (XawpHistoryLinkedList_t* )malloc(sizeof(XawpHistoryLinkedList_t));
     temp->next = NULL;
+
     strcpy(temp->confFilePath, line);
+
     if(history->head != NULL)
       temp->next = history->head;
+
     history->head = temp;
+
+    if(++history->configsCount >= 50) {
+      // TODO: If more than 50, start removing older configs from cache
+      break;
+    }
   }
 
-  fclose(cacheFile);
+  if(fclose(cacheFile) != 0) {
+    return errno;
+  }
 
   return 0;
 }
@@ -91,6 +101,34 @@ int history_refresh(XawpHistory_t *history) {
 
   /* This function refreshes the linked list from the struct to an updated list
    * of config paths. */
+
+  /* Store the old path */
+  char historyDefaultPath[PATH_MAX];
+  strcpy(historyDefaultPath, history->cacheFilePath);
+
+  /* Clear everything from history */
+  history_unref(history);
+
+  /* Reload files into history */
+  history_init(history, historyDefaultPath);
+
+  /* Copy the old path back */
+  strcpy(history->cacheFilePath, historyDefaultPath);
+
+  return 0;
+}
+
+int history_unref(XawpHistory_t *history) {
+
+  /* This unreference functions makes sure every byte from the passed struct is
+   * dealocated. Mostly used when cleaning up before exiting. */
+
+  /* NULL every char of history->cacheFilePath string */
+  for(int i = 0; i < (sizeof(history->cacheFilePath) * PATH_MAX); i++)
+    history->cacheFilePath[i] = '\0';
+
+  /* Reset the image count */
+  history->configsCount = 0;
 
   XawpHistoryLinkedList_t *temp;
   XawpHistoryLinkedList_t *temp2;
@@ -107,14 +145,6 @@ int history_refresh(XawpHistory_t *history) {
   history->head = NULL;
 
   return 0;
-}
-
-int history_unref(XawpHistory_t *history) {
-
-  /* This unreference functions makes sure every byte from the passed struct is
-   * dealocated. Mostly used when cleaning up before exiting. */
-
-//TODO
 }
 
 int history_set_list(XawpHistory_t *history, char *configPath) {
@@ -138,20 +168,6 @@ int history_clear_all(XawpHistory_t *history) {
   /* This function clears all the path values inside a XawpHistory_t type
    * linked list and the text inside it's cache file. */
 
-  XawpHistoryLinkedList_t *temp;
-  XawpHistoryLinkedList_t *temp2;
-
-  temp = history->head;
-
-  /* Free memory until it finds a NULL 'next' pointer. */
-  while(temp->next != NULL) {
-    temp = temp->next;
-    temp2 = temp->next;
-    free(temp);
-    temp = temp2;
-  }
-  history->head = NULL;
-
   /* Delete the cache file from the system */
   FILE *cacheFile = fopen(history->cacheFilePath , "w+");
 
@@ -164,6 +180,9 @@ int history_clear_all(XawpHistory_t *history) {
   if(fclose(cacheFile) != 0) {
     return errno;
   }
+
+  /* Free the history struct and it's linked list */
+  history_unref(history);
 
   /* After everything went smoothly, return with 0 */
   return 0;
