@@ -26,7 +26,7 @@
 
 /* XAWP created header files */
 #include "fancy-text.h"
-#include "dir-checker.h"
+#include "dir-handler.h"
 
 void formatPath(char *path, char formattedPath[PATH_MAX]) {
 

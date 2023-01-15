@@ -22,15 +22,17 @@
 #include <string.h>
 #include <stdlib.h>
 #include <libgen.h>
+#include <errno.h>
 
 #include "fancy-text.h"
-#include "dir-checker.h"
+#include "dir-handler.h"
 #include "history.h"
 
 int history_init(XawpHistory_t *history, char *cacheFilePath) {
 
   /* This init function initiates everything necessary into XawpHistory_t like
    * loading the config paths from the cache file into the linked list. */
+
   /* Check if the path is correct and if it's not, fix it */
   char historyDefaultPath[PATH_MAX];
   char historyDefaultDirPath[PATH_MAX];
@@ -50,10 +52,14 @@ int history_init(XawpHistory_t *history, char *cacheFilePath) {
   if(cacheFile == NULL) {
     FILE *cacheFileWrite = fopen(history->cacheFilePath , "w+");
     if(cacheFileWrite == NULL) {
+      int tmperror = errno;
       fprintf(stderr, ERR_TEXT_PUTS"Error creating or opening the file %s\n", history->cacheFilePath);
-      return -1;
+      return tmperror;
     }
-    fclose(cacheFileWrite);
+
+    if(fclose(cacheFileWrite) != 0) {
+      return errno;
+    }
 
     /* Just created a new cache file, so returning since there is no real
      * meaning to continue loading configs from an empty file */
@@ -86,6 +92,21 @@ int history_refresh(XawpHistory_t *history) {
   /* This function refreshes the linked list from the struct to an updated list
    * of config paths. */
 
+  XawpHistoryLinkedList_t *temp;
+  XawpHistoryLinkedList_t *temp2;
+
+  temp = history->head;
+
+  /* Free memory until it finds a NULL 'next' pointer. */
+  while(temp->next != NULL) {
+    temp = temp->next;
+    temp2 = temp->next;
+    free(temp);
+    temp = temp2;
+  }
+  history->head = NULL;
+
+  return 0;
 }
 
 int history_unref(XawpHistory_t *history) {
@@ -93,6 +114,7 @@ int history_unref(XawpHistory_t *history) {
   /* This unreference functions makes sure every byte from the passed struct is
    * dealocated. Mostly used when cleaning up before exiting. */
 
+//TODO
 }
 
 int history_set_list(XawpHistory_t *history, char *configPath) {
@@ -100,6 +122,7 @@ int history_set_list(XawpHistory_t *history, char *configPath) {
   /* This setter function sets a new path at the begining of a XawpHistory_t
    * type linked list and it's cache file. */
 
+//TODO
 }
 
 int history_get_list(char *dest, XawpHistory_t *history, uint8_t index) {
@@ -107,6 +130,7 @@ int history_get_list(char *dest, XawpHistory_t *history, uint8_t index) {
   /* This getter function gets a path at a specific index of a XawpHistory_t
    * type linked list and it's cache file. */
 
+//TODO
 }
 
 int history_clear_all(XawpHistory_t *history) {
@@ -114,6 +138,35 @@ int history_clear_all(XawpHistory_t *history) {
   /* This function clears all the path values inside a XawpHistory_t type
    * linked list and the text inside it's cache file. */
 
+  XawpHistoryLinkedList_t *temp;
+  XawpHistoryLinkedList_t *temp2;
+
+  temp = history->head;
+
+  /* Free memory until it finds a NULL 'next' pointer. */
+  while(temp->next != NULL) {
+    temp = temp->next;
+    temp2 = temp->next;
+    free(temp);
+    temp = temp2;
+  }
+  history->head = NULL;
+
+  /* Delete the cache file from the system */
+  FILE *cacheFile = fopen(history->cacheFilePath , "w+");
+
+  if(cacheFile == NULL) {
+    int tmperror = errno;
+    fprintf(stderr, ERR_TEXT_PUTS"Error creating or opening the file %s\n", history->cacheFilePath);
+    return tmperror;
+  }
+
+  if(fclose(cacheFile) != 0) {
+    return errno;
+  }
+
+  /* After everything went smoothly, return with 0 */
+  return 0;
 }
 
 int history_clear_element(XawpHistory_t *history, uint8_t index) {
@@ -121,4 +174,5 @@ int history_clear_element(XawpHistory_t *history, uint8_t index) {
   /* This setter function clears a specific path value at a specific index of a
    * XawpHistory_t type linked list and it's text element inside cache file. */
 
+//TODO
 }

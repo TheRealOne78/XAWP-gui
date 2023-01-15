@@ -36,7 +36,7 @@
 #include "info.h"
 #include "fancy-text.h"
 #include "xawp-gui.h"
-#include "dir-checker.h"
+#include "dir-handler.h"
 #include "history.h"
 
 /* Where the default config exists. */
