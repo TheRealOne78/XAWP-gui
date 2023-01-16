@@ -54,7 +54,7 @@ int history_set_list(XawpHistory_t *history, char *configPath);
 int history_get_list(char *dest, XawpHistory_t *history, uint8_t index);
 
 /* Clear history functions */
-int history_clear_all(XawpHistory_t *history);
 int history_clear_element(XawpHistory_t *history, uint8_t index);
+int history_clear_all(XawpHistory_t *history);
 
 #endif

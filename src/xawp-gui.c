@@ -58,21 +58,25 @@ int main(int argc, char **argv) {
 
 static void activate(GApplication *app, gpointer user_data) {
   GError *error = NULL;
-  GtkBuilder *builder_main;
-  GtkBuilder *builder_about_info;
-  GtkBuilder *builder_popup;
+  /* Construct GtkBuilder instances */
+  GtkBuilder *builder_main = gtk_builder_new();
+  GtkBuilder *builder_popup = gtk_builder_new();
 
+  /* === builder_main === */
   GObject *window; /* (GtkWindow) */
-  GObject *window_headerbar; /* (GtkHeaderBar) */
 
   /* == Header Bar == */
   /* Header bar select + create buttons */
+  GObject *window_headerbar; /* (GtkHeaderBar) */
   GObject *window_headerbar_grid_always_buttonbox_button_select; /* (GtkButton) */
   GObject *window_headerbar_grid_always_buttobox_button_create; /* (GtkButton) */
   /* Header bar stack 1 aka config window */
   GObject *window_headerbar_grid_stack_1_buttonbox_cancel; /* (GtkButton) */
   GObject *window_headerbar_grid_stack_1_buttonbox_save; /* (GtkButton) */
   GObject *window_headerbar_grid_stack_1_buttonbox_set_as_default; /* (GtkButton) */
+  /* Header bar stack 2 aka convert window */
+  GObject *window_headerbar_grid_stack_2_buttonbox_cancel; /* (GtkButton) */
+  GObject *window_headerbar_grid_stack_2_buttonbox_convert; /* (GtkButton) */
 
   /* == Main menu buttons == */
   GObject *mainmenu_buttonmenu_select_configuration_file; /* (GtkModelButton) */
@@ -81,23 +85,27 @@ static void activate(GApplication *app, gpointer user_data) {
   GObject *mainmenu_buttonmenu_clear_history; /* (GtkModelButton) */
   GObject *mainmenu_buttonmenu_about_info; /* (GtkModelButton) */
 
+  /* == Status bar == */
+  GObject *window_grid_bottom_status_bar; /* (GtkStatusBar) */
+
   /* == Stacks and their childs == */
   /* Headerbar's stack */
   GObject *window_headerbar_grid_stack; /* (GtkStack) */
   GObject *window_headerbar_grid_stack_0_grid; /* (GtkGrid) - child of headerbar stack */
   GObject *window_headerbar_grid_stack_1_buttonbox; /* (GtkButtonBox) - child of headerbar stack */
+  GObject *window_headerbar_grid_stack_2_buttonbox; /* (GtkButtonBox) - child of headerbar stack */
   /* Body's workbench stack */
   GObject *body_workbench_stack; /* (GtkStack) */
   GObject *workbench_config_paned; /* (GtkPaned) - child of workbench stack */
+  GObject *workbench_convert_paned; /* (GtkPaned) - child of workbench stack */
   /* Workbench's home stack */
   GObject *workbench_home_stack; /* (GtkStack) - child of workbench stack */
   GObject *workbench_home_stack_empty_history; /* (GtkLabel) - child of home stack */
   GObject *workbench_home_stack_has_history; /* (GtkFixed) - child of home stack */
 
-  /* == About info == */
+  /* === builder_popup === */
+  /* About info */
   GObject *popup_about_info; /* (GtkAboutDialog) */
-
-  /* == Popups related objects == */
   /* Config cancel */
   GObject *on_config_cancel_dialog;
   GObject *on_config_cancel_dialog_button_yes;
@@ -106,41 +114,44 @@ static void activate(GApplication *app, gpointer user_data) {
   GObject *popup_error;
   GObject *popup_error_button_ok;
 
-  /* Construct a GtkBuilder instance and load our UI description */
-  builder_main = gtk_builder_new();
-  builder_about_info = gtk_builder_new();
-  builder_popup = gtk_builder_new();
-
   /* Add the UI files to builders and check if they opened correctly, else exit */
-  if(gtk_builder_add_from_file(builder_main, "../ui/main.ui", &error)             == 0 ||
-     gtk_builder_add_from_file(builder_about_info, "../ui/about-info.ui", &error) == 0 ||
-     gtk_builder_add_from_file(builder_popup, "../ui/popup.ui", &error)           == 0
+  if(gtk_builder_add_from_file(builder_main, "/usr/share/xawp/ui/main.ui", &error)   == 0 ||
+     gtk_builder_add_from_file(builder_popup, "/usr/share/xawp/ui/popup.ui", &error) == 0
      ) {
     g_printerr(ERR_TEXT_PUTS"Error loading file: %s\n", error->message);
     g_clear_error(&error);
     exit(EXIT_FAILURE);
   }
 
-  /* Declare a pointer for each Gtk object */
-  /* Windows */
+  /* Start declaring UI descriptions */
+  /* builder_main */
   window = gtk_builder_get_object(builder_main, "window");
+  window_headerbar = gtk_builder_get_object(builder_main, "window_headerbar");
   window_headerbar_grid_always_buttonbox_button_select = gtk_builder_get_object(builder_main, "window_headerbar_grid_always_buttonbox_button_select");
   window_headerbar_grid_always_buttobox_button_create = gtk_builder_get_object(builder_main, "window_headerbar_grid_always_buttobox_button_create");
   window_headerbar_grid_stack_1_buttonbox_cancel = gtk_builder_get_object(builder_main, "window_headerbar_grid_stack_1_buttonbox_cancel");
   window_headerbar_grid_stack_1_buttonbox_save = gtk_builder_get_object(builder_main, "window_headerbar_grid_stack_1_buttonbox_save");
   window_headerbar_grid_stack_1_buttonbox_set_as_default = gtk_builder_get_object(builder_main, "window_headerbar_grid_stack_1_buttonbox_set_as_default");
+  window_headerbar_grid_stack_2_buttonbox_cancel = gtk_builder_get_object(builder_main, "window_headerbar_grid_stack_2_buttonbox_cancel");
+  window_headerbar_grid_stack_2_buttonbox_convert = gtk_builder_get_object(builder_main, "window_headerbar_grid_stack_2_buttonbox_convert");
   mainmenu_buttonmenu_select_configuration_file = gtk_builder_get_object(builder_main, "mainmenu_buttonmenu_select_configuration_file");
   mainmenu_buttonmenu_create_configuration_file = gtk_builder_get_object(builder_main, "mainmenu_buttonmenu_create_configuration_file");
   mainmenu_buttonmenu_convert_to_animated_images = gtk_builder_get_object(builder_main, "mainmenu_buttonmenu_convert_to_animated_images");
   mainmenu_buttonmenu_clear_history = gtk_builder_get_object(builder_main, "mainmenu_buttonmenu_clear_history");
   mainmenu_buttonmenu_about_info = gtk_builder_get_object(builder_main, "mainmenu_buttonmenu_about_info");
+  window_grid_bottom_status_bar = gtk_builder_get_object(builder_main, "window_grid_bottom_status_bar");
+  window_headerbar_grid_stack = gtk_builder_get_object(builder_main, "window_headerbar_grid_stack");
+  window_headerbar_grid_stack_0_grid = gtk_builder_get_object(builder_main, "window_headerbar_grid_stack_0_grid");
+  window_headerbar_grid_stack_1_buttonbox = gtk_builder_get_object(builder_main, "window_headerbar_grid_stack_1_buttonbox");
+  window_headerbar_grid_stack_2_buttonbox = gtk_builder_get_object(builder_main, "window_headerbar_grid_stack_2_buttonbox");
   body_workbench_stack = gtk_builder_get_object(builder_main, "body_workbench_stack");
   workbench_config_paned = gtk_builder_get_object(builder_main, "workbench_config_paned");
+  workbench_convert_paned = gtk_builder_get_object(builder_main, "workbench_convert_paned");
   workbench_home_stack = gtk_builder_get_object(builder_main, "workbench_home_stack");
   workbench_home_stack_empty_history = gtk_builder_get_object(builder_main, "workbench_home_stack_empty_history");
   workbench_home_stack_has_history = gtk_builder_get_object(builder_main, "workbench_home_stack_has_history");
-  popup_about_info = gtk_builder_get_object(builder_about_info, "popup_about_info");
-  /* Popups */
+  /* builder_popup */
+  popup_about_info = gtk_builder_get_object(builder_popup, "popup_about_info");
   on_config_cancel_dialog = gtk_builder_get_object(builder_popup, "on_config_cancel_dialog");
   on_config_cancel_dialog_button_yes = gtk_builder_get_object(builder_popup, "on_config_cancel_dialog_button_yes");
   on_config_cancel_dialog_button_no = gtk_builder_get_object(builder_popup, "on_config_cancel_dialog_button_no");
@@ -161,6 +172,7 @@ static void activate(GApplication *app, gpointer user_data) {
   g_signal_connect(mainmenu_buttonmenu_convert_to_animated_images, "clicked", G_CALLBACK(on_convert_images), window);
   g_signal_connect(mainmenu_buttonmenu_clear_history, "clicked", G_CALLBACK(on_clear_history), NULL);
   g_signal_connect(mainmenu_buttonmenu_about_info, "clicked", G_CALLBACK(on_about_info), popup_about_info);
+
   g_signal_connect(popup_about_info, "response", G_CALLBACK(close_about_dialog), NULL);
 
   /* Give response IDs */

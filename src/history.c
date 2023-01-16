@@ -124,8 +124,7 @@ int history_unref(XawpHistory_t *history) {
    * dealocated. Mostly used when cleaning up before exiting. */
 
   /* NULL every char of history->cacheFilePath string */
-  for(int i = 0; i < (sizeof(history->cacheFilePath) * PATH_MAX); i++)
-    history->cacheFilePath[i] = '\0';
+  memset(history->cacheFilePath, '\0', (sizeof(history->cacheFilePath) * PATH_MAX));
 
   /* Reset the image count */
   history->configsCount = 0;
@@ -163,6 +162,14 @@ int history_get_list(char *dest, XawpHistory_t *history, uint8_t index) {
 //TODO
 }
 
+int history_clear_element(XawpHistory_t *history, uint8_t index) {
+
+  /* This setter function clears a specific path value at a specific index of a
+   * XawpHistory_t type linked list and it's text element inside cache file. */
+
+//TODO
+}
+
 int history_clear_all(XawpHistory_t *history) {
 
   /* This function clears all the path values inside a XawpHistory_t type
@@ -186,12 +193,4 @@ int history_clear_all(XawpHistory_t *history) {
 
   /* After everything went smoothly, return with 0 */
   return 0;
-}
-
-int history_clear_element(XawpHistory_t *history, uint8_t index) {
-
-  /* This setter function clears a specific path value at a specific index of a
-   * XawpHistory_t type linked list and it's text element inside cache file. */
-
-//TODO
 }
