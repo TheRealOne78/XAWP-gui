@@ -107,9 +107,9 @@ static void activate(GApplication *app, gpointer user_data) {
   /* About info */
   GObject *popup_about_info; /* (GtkAboutDialog) */
   /* Config cancel */
-  GObject *on_config_cancel_dialog;
-  GObject *on_config_cancel_dialog_button_yes;
-  GObject *on_config_cancel_dialog_button_no;
+  GObject *popup_cancel;
+  GObject *popup_cancel_button_yes;
+  GObject *popup_cancel_button_no;
   /* Error */
   GObject *popup_error;
   GObject *popup_error_button_ok;
@@ -152,9 +152,9 @@ static void activate(GApplication *app, gpointer user_data) {
   workbench_home_stack_has_history = gtk_builder_get_object(builder_main, "workbench_home_stack_has_history");
   /* builder_popup */
   popup_about_info = gtk_builder_get_object(builder_popup, "popup_about_info");
-  on_config_cancel_dialog = gtk_builder_get_object(builder_popup, "on_config_cancel_dialog");
-  on_config_cancel_dialog_button_yes = gtk_builder_get_object(builder_popup, "on_config_cancel_dialog_button_yes");
-  on_config_cancel_dialog_button_no = gtk_builder_get_object(builder_popup, "on_config_cancel_dialog_button_no");
+  popup_cancel = gtk_builder_get_object(builder_popup, "popup_cancel");
+  popup_cancel_button_yes = gtk_builder_get_object(builder_popup, "popup_cancel_button_yes");
+  popup_cancel_button_no = gtk_builder_get_object(builder_popup, "popup_cancel_button_no");
   popup_error = gtk_builder_get_object(builder_popup, "popup_error");
   popup_error_button_ok = gtk_builder_get_object(builder_popup, "popup_error_button_ok");
 
@@ -163,7 +163,7 @@ static void activate(GApplication *app, gpointer user_data) {
   g_signal_connect(window_headerbar_grid_always_buttonbox_button_select, "clicked", G_CALLBACK(on_select_configuration_file), window);
   g_signal_connect(window_headerbar_grid_always_buttobox_button_create, "clicked", G_CALLBACK(on_create_configuration_file), window);
 
-  g_signal_connect(window_headerbar_grid_stack_1_buttonbox_cancel, "clicked", G_CALLBACK(on_config_cancel), window);
+  g_signal_connect(window_headerbar_grid_stack_1_buttonbox_cancel, "clicked", G_CALLBACK(on_cancel), window);
   g_signal_connect(window_headerbar_grid_stack_1_buttonbox_save, "clicked", G_CALLBACK(on_config_save), NULL);
   g_signal_connect(window_headerbar_grid_stack_1_buttonbox_set_as_default, "clicked", G_CALLBACK(on_config_set_as_default), NULL);
 
@@ -177,15 +177,15 @@ static void activate(GApplication *app, gpointer user_data) {
 
   /* Give response IDs */
   /* config cancel dialog buttons */
-  gtk_dialog_add_action_widget(GTK_DIALOG(on_config_cancel_dialog), GTK_WIDGET(on_config_cancel_dialog_button_yes), GTK_RESPONSE_YES);
-  gtk_dialog_add_action_widget(GTK_DIALOG(on_config_cancel_dialog), GTK_WIDGET(on_config_cancel_dialog_button_no), GTK_RESPONSE_NO);
+  gtk_dialog_add_action_widget(GTK_DIALOG(popup_cancel), GTK_WIDGET(popup_cancel_button_yes), GTK_RESPONSE_YES);
+  gtk_dialog_add_action_widget(GTK_DIALOG(popup_cancel), GTK_WIDGET(popup_cancel_button_no), GTK_RESPONSE_NO);
   /* error button */
   gtk_dialog_add_action_widget(GTK_DIALOG(popup_error), GTK_WIDGET(popup_error_button_ok), GTK_RESPONSE_OK);
 
   /* Do all miscellaneous things for initial setup */
   gtk_header_bar_set_title(GTK_HEADER_BAR(gtk_builder_get_object(builder_main, "window_headerbar")), "XAWP-gui");
   gtk_window_set_transient_for(GTK_WINDOW(popup_about_info), GTK_WINDOW(window));
-  gtk_window_set_transient_for(GTK_WINDOW(on_config_cancel_dialog), GTK_WINDOW(window));
+  gtk_window_set_transient_for(GTK_WINDOW(popup_cancel), GTK_WINDOW(window));
   formatPath(DEFAULT_CONFIG_PATH, default_config_path);
   history_init(&history, HISTORY_DEFAULT_PATH);
 
@@ -280,7 +280,7 @@ static void on_create_configuration_file(GtkWidget *widget, gpointer data) {
 //TODO
 }
 
-static void on_config_cancel(GtkWidget *widget, gpointer data) {
+static void on_cancel(GtkWidget *widget, gpointer data) {
   /* If the respone ID is YES, return to home, else continue to edit the config */
   gint response = gtk_dialog_run(GTK_DIALOG(widget));
   if(response == GTK_RESPONSE_YES) {

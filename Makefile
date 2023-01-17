@@ -18,10 +18,13 @@ $(BIN):
 	mkdir -p $(BUILD_DIR)
 	$(CC) $(CFLAGS) $(SRC) $(LDFLAGS) -o $(BUILD_DIR)$(BIN)
 
-# TODO: refactor this mess
-install:
-	# Install resources
+install_res_dir:
+	# Install resources directory
 	install -d --owner=$(shell stat -c "%U" $(USR_SHARE_DIR)) --group=$(shell stat -c "%G" $(USR_SHARE_DIR)) -m 755 $(RES_INSTALL_DIR)
+
+# TODO: refactor this mess
+install: install_res_dir
+	#install the other resources directories
 	install -d --owner=$(shell stat -c "%U" $(RES_INSTALL_DIR)) --group=$(shell stat -c "%G" $(RES_INSTALL_DIR)) -m 755 $(UI_INSTALL_DIR)
 	install -d --owner=$(shell stat -c "%U" $(RES_INSTALL_DIR)) --group=$(shell stat -c "%G" $(RES_INSTALL_DIR)) -m 755 $(ICO_INSTALL_DIR)
 	install -t $(UI_INSTALL_DIR) --owner=$(shell stat -c "%U" $(RES_INSTALL_DIR)) --group=$(shell stat -c "%G" $(RES_INSTALL_DIR)) -m 775 $(UI)
