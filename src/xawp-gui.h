@@ -24,6 +24,11 @@
 # define DEFAULT_CONFIG_PATH "~/.config/xawp/"
 #endif
 
+struct on_about_info_struct {
+  GObject *statusbar;
+  GObject *popup;
+};
+
 /* Activate Gtk */
 static void activate();
 

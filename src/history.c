@@ -124,7 +124,7 @@ int history_unref(XawpHistory_t *history) {
    * dealocated. Mostly used when cleaning up before exiting. */
 
   /* NULL every char of history->cacheFilePath string */
-  memset(history->cacheFilePath, '\0', (sizeof(history->cacheFilePath) * PATH_MAX));
+  memset(history->cacheFilePath, '\0', sizeof(history->cacheFilePath));
 
   /* Reset the image count */
   history->configsCount = 0;
@@ -135,13 +135,15 @@ int history_unref(XawpHistory_t *history) {
   temp = history->head;
 
   /* Free memory until it finds a NULL 'next' pointer. */
-  while(temp->next != NULL) {
-    temp = temp->next;
-    temp2 = temp->next;
-    free(temp);
-    temp = temp2;
+  if(temp != NULL) {
+    while(temp->next != NULL) {
+      temp = temp->next;
+      temp2 = temp->next;
+      free(temp);
+      temp = temp2;
+    }
+    history->head = NULL;
   }
-  history->head = NULL;
 
   return 0;
 }
@@ -151,15 +153,41 @@ int history_set_list(XawpHistory_t *history, char *configPath) {
   /* This setter function sets a new path at the begining of a XawpHistory_t
    * type linked list and it's cache file. */
 
-//TODO
+  XawpHistoryLinkedList_t *temp;
+
+  if(history->head != NULL) {
+    temp = (XawpHistoryLinkedList_t* )malloc(sizeof(XawpHistoryLinkedList_t));
+    strcpy(temp->confFilePath, configPath);
+    temp->next = history->head;
+    history->head = temp;
+  }
+
+  return 0;
+  //TODO: add to cache file the conf file
 }
 
-int history_get_list(char *dest, XawpHistory_t *history, uint8_t index) {
+int history_get_list(char dest[PATH_MAX], XawpHistory_t *history, uint8_t index) {
 
   /* This getter function gets a path at a specific index of a XawpHistory_t
    * type linked list and it's cache file. */
 
-//TODO
+  XawpHistoryLinkedList_t *temp;
+
+  if(history->head != NULL) {
+    temp = history->head;
+    for(uint8_t i = 1; i < index; i++) {
+      if(temp->next != NULL)
+        temp = temp->next;
+      else {
+        fprintf(stderr, ERR_TEXT_PUTS"Fatal error: In function history_get_list: temp->next is NULL! Can't set at index %d.\n", index);
+        return 1;
+      }
+    }
+    strcpy(dest, temp->confFilePath);
+  }
+
+  return 0;
+//TODO: verify if this is correct
 }
 
 int history_clear_element(XawpHistory_t *history, uint8_t index) {
@@ -167,6 +195,7 @@ int history_clear_element(XawpHistory_t *history, uint8_t index) {
   /* This setter function clears a specific path value at a specific index of a
    * XawpHistory_t type linked list and it's text element inside cache file. */
 
+  XawpHistoryLinkedList_t *temp;
 //TODO
 }
 

@@ -106,6 +106,10 @@ static void activate(GApplication *app, gpointer user_data) {
   /* === builder_popup === */
   /* About info */
   GObject *popup_about_info; /* (GtkAboutDialog) */
+  /* Clear history */
+  GObject *on_clear_history_dialog;
+  GObject *on_clear_history_vbox_buttonbox_button_yes;
+  GObject *on_clear_history_vbox_buttonbox_button_no;
   /* Config cancel */
   GObject *popup_cancel;
   GObject *popup_cancel_button_yes;
@@ -152,6 +156,9 @@ static void activate(GApplication *app, gpointer user_data) {
   workbench_home_stack_has_history = gtk_builder_get_object(builder_main, "workbench_home_stack_has_history");
   /* builder_popup */
   popup_about_info = gtk_builder_get_object(builder_popup, "popup_about_info");
+  on_clear_history_dialog = gtk_builder_get_object(builder_popup, "on_clear_history_dialog");
+  on_clear_history_vbox_buttonbox_button_yes = gtk_builder_get_object(builder_popup, "on_clear_history_vbox_buttonbox_button_yes");
+  on_clear_history_vbox_buttonbox_button_no = gtk_builder_get_object(builder_popup, "on_clear_history_vbox_buttonbox_button_no");
   popup_cancel = gtk_builder_get_object(builder_popup, "popup_cancel");
   popup_cancel_button_yes = gtk_builder_get_object(builder_popup, "popup_cancel_button_yes");
   popup_cancel_button_no = gtk_builder_get_object(builder_popup, "popup_cancel_button_no");
@@ -170,13 +177,19 @@ static void activate(GApplication *app, gpointer user_data) {
   g_signal_connect(mainmenu_buttonmenu_select_configuration_file, "clicked", G_CALLBACK(on_select_configuration_file), window);
   g_signal_connect(mainmenu_buttonmenu_create_configuration_file, "clicked", G_CALLBACK(on_create_configuration_file), window);
   g_signal_connect(mainmenu_buttonmenu_convert_to_animated_images, "clicked", G_CALLBACK(on_convert_images), window);
-  g_signal_connect(mainmenu_buttonmenu_clear_history, "clicked", G_CALLBACK(on_clear_history), NULL);
+  struct on_about_info_struct on_about_info_struct_w = {
+    .statusbar = window_grid_bottom_status_bar,
+    .popup = on_clear_history_dialog
+  };
+  g_signal_connect(mainmenu_buttonmenu_clear_history, "clicked", G_CALLBACK(on_clear_history), &on_about_info_struct_w);
   g_signal_connect(mainmenu_buttonmenu_about_info, "clicked", G_CALLBACK(on_about_info), popup_about_info);
 
   g_signal_connect(popup_about_info, "response", G_CALLBACK(close_about_dialog), NULL);
 
   /* Give response IDs */
   /* config cancel dialog buttons */
+  gtk_dialog_add_action_widget(GTK_DIALOG(on_clear_history_dialog), GTK_WIDGET(on_clear_history_vbox_buttonbox_button_yes), GTK_RESPONSE_YES);
+  gtk_dialog_add_action_widget(GTK_DIALOG(on_clear_history_dialog), GTK_WIDGET(on_clear_history_vbox_buttonbox_button_no), GTK_RESPONSE_NO);
   gtk_dialog_add_action_widget(GTK_DIALOG(popup_cancel), GTK_WIDGET(popup_cancel_button_yes), GTK_RESPONSE_YES);
   gtk_dialog_add_action_widget(GTK_DIALOG(popup_cancel), GTK_WIDGET(popup_cancel_button_no), GTK_RESPONSE_NO);
   /* error button */
@@ -185,6 +198,7 @@ static void activate(GApplication *app, gpointer user_data) {
   /* Do all miscellaneous things for initial setup */
   gtk_header_bar_set_title(GTK_HEADER_BAR(gtk_builder_get_object(builder_main, "window_headerbar")), "XAWP-gui");
   gtk_window_set_transient_for(GTK_WINDOW(popup_about_info), GTK_WINDOW(window));
+  gtk_window_set_transient_for(GTK_WINDOW(on_clear_history_dialog), GTK_WINDOW(window));
   gtk_window_set_transient_for(GTK_WINDOW(popup_cancel), GTK_WINDOW(window));
   formatPath(DEFAULT_CONFIG_PATH, default_config_path);
   history_init(&history, HISTORY_DEFAULT_PATH);
@@ -306,8 +320,16 @@ static void on_convert_images(GtkWidget *widget, gpointer data) {
 }
 
 static void on_clear_history(GtkWidget *widget, gpointer data) {
-
-//TODO
+  struct on_about_info_struct *widgets = (struct on_about_info_struct* )data;
+  gint result = gtk_dialog_run(GTK_DIALOG(widgets->popup));
+  if(result == GTK_RESPONSE_YES) {
+    guint context_id;
+    history_clear_all(&history);
+    gtk_statusbar_push(GTK_STATUSBAR(widgets->statusbar), context_id, "Cleared the history");
+  }
+  else if(result == GTK_RESPONSE_NO) { }
+  gtk_widget_hide(GTK_WIDGET(widgets->popup));
+  //TODO
 }
 
 static void on_about_info(GtkWidget *widget, gpointer data) {
