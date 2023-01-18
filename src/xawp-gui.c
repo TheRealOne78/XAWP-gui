@@ -108,6 +108,7 @@ static void activate(GApplication *app, gpointer user_data) {
   GObject *popup_about_info; /* (GtkAboutDialog) */
   /* Clear history */
   GObject *on_clear_history_dialog;
+  GObject *on_clear_history_vbox_buttonbox;
   GObject *on_clear_history_vbox_buttonbox_button_yes;
   GObject *on_clear_history_vbox_buttonbox_button_no;
   /* Config cancel */
@@ -119,9 +120,9 @@ static void activate(GApplication *app, gpointer user_data) {
   GObject *popup_error_button_ok;
 
   /* Add the UI files to builders and check if they opened correctly, else exit */
-  if(gtk_builder_add_from_file(builder_main, "/usr/share/xawp/ui/main.ui", &error)   == 0 ||
-     gtk_builder_add_from_file(builder_popup, "/usr/share/xawp/ui/popup.ui", &error) == 0
-     ) {
+  if(gtk_builder_add_from_file(builder_main, "../ui/main.ui", &error)   == 0 ||
+     gtk_builder_add_from_file(builder_popup, "../ui/popup.ui", &error) == 0
+     ) { /* TODO: Add test ui first and production ai */
     g_printerr(ERR_TEXT_PUTS"Error loading file: %s\n", error->message);
     g_clear_error(&error);
     exit(EXIT_FAILURE);
@@ -157,13 +158,13 @@ static void activate(GApplication *app, gpointer user_data) {
   /* builder_popup */
   popup_about_info = gtk_builder_get_object(builder_popup, "popup_about_info");
   on_clear_history_dialog = gtk_builder_get_object(builder_popup, "on_clear_history_dialog");
-  on_clear_history_vbox_buttonbox_button_yes = gtk_builder_get_object(builder_popup, "on_clear_history_vbox_buttonbox_button_yes");
-  on_clear_history_vbox_buttonbox_button_no = gtk_builder_get_object(builder_popup, "on_clear_history_vbox_buttonbox_button_no");
+  on_clear_history_vbox_buttonbox_button_yes = G_OBJECT(gtk_button_new_with_label("Yes"));
+  on_clear_history_vbox_buttonbox_button_no = G_OBJECT(gtk_button_new_with_label("No"));
   popup_cancel = gtk_builder_get_object(builder_popup, "popup_cancel");
-  popup_cancel_button_yes = gtk_builder_get_object(builder_popup, "popup_cancel_button_yes");
-  popup_cancel_button_no = gtk_builder_get_object(builder_popup, "popup_cancel_button_no");
+  popup_cancel_button_yes = G_OBJECT(gtk_button_new_with_label("Yes"));
+  popup_cancel_button_no = G_OBJECT(gtk_button_new_with_label("No"));
   popup_error = gtk_builder_get_object(builder_popup, "popup_error");
-  popup_error_button_ok = gtk_builder_get_object(builder_popup, "popup_error_button_ok");
+  popup_error_button_ok = G_OBJECT(gtk_button_new_with_label("Ok"));
 
   /* Connect signal handlers to the constructed widgets */
   g_signal_connect(window, "destroy", G_CALLBACK(gtk_main_quit), NULL);
@@ -296,6 +297,7 @@ static void on_create_configuration_file(GtkWidget *widget, gpointer data) {
 
 static void on_cancel(GtkWidget *widget, gpointer data) {
   /* If the respone ID is YES, return to home, else continue to edit the config */
+  gtk_widget_show_all(GTK_WIDGET(widget));
   gint response = gtk_dialog_run(GTK_DIALOG(widget));
   if(response == GTK_RESPONSE_YES) {
     // TODO: switch to home
@@ -321,6 +323,7 @@ static void on_convert_images(GtkWidget *widget, gpointer data) {
 
 static void on_clear_history(GtkWidget *widget, gpointer data) {
   struct on_about_info_struct *widgets = (struct on_about_info_struct* )data;
+  gtk_widget_show_all(GTK_WIDGET(widgets->popup));
   gint result = gtk_dialog_run(GTK_DIALOG(widgets->popup));
   if(result == GTK_RESPONSE_YES) {
     guint context_id;
@@ -334,6 +337,7 @@ static void on_clear_history(GtkWidget *widget, gpointer data) {
 
 static void on_about_info(GtkWidget *widget, gpointer data) {
   /* Run the about info dialog */
+  gtk_widget_show_all(GTK_WIDGET(data));
   gtk_dialog_run(GTK_DIALOG(data));
 }
 
