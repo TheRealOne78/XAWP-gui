@@ -1,6 +1,6 @@
 LDFLAGS = -lconfig $(shell pkg-config --libs gtk+-3.0 glib-2.0)
 CC = gcc
-CFLAGS = -g $(shell pkg-config --cflags gtk+-3.0 glib-2.0)
+CFLAGS = -O2 $(shell pkg-config --cflags gtk+-3.0 glib-2.0)
 SRC = ./src/*.c
 
 BIN = xawp-gui
@@ -8,7 +8,7 @@ BUILD_DIR = ./build/
 BIN_INSTALL_DIR = /usr/bin/
 
 UI = ./ui/*.ui
-ICO = ./images/*.png
+ICO = ./icons/*.png
 USR_SHARE_DIR = /usr/share/
 RES_INSTALL_DIR = $(USR_SHARE_DIR)xawp/
 UI_INSTALL_DIR = $(RES_INSTALL_DIR)ui/
