@@ -24,6 +24,24 @@
 # define DEFAULT_CONFIG_PATH "~/.config/xawp/"
 #endif
 
+struct stacks {
+  /* == Stacks and their childs == */
+  GObject *window;
+  /* Headerbar's stack */
+  GObject *window_headerbar_grid_stack; /* (GtkStack) */
+  GObject *window_headerbar_grid_stack_0_grid; /* (GtkGrid) - child of headerbar stack */
+  GObject *window_headerbar_grid_stack_1_buttonbox; /* (GtkButtonBox) - child of headerbar stack */
+  GObject *window_headerbar_grid_stack_2_buttonbox; /* (GtkButtonBox) - child of headerbar stack */
+  /* Body's workbench stack */
+  GObject *body_workbench_stack; /* (GtkStack) */
+  GObject *workbench_config_paned; /* (GtkPaned) - child of workbench stack */
+  GObject *workbench_convert_paned; /* (GtkPaned) - child of workbench stack */
+  /* Workbench's home stack */
+  GObject *workbench_home_stack; /* (GtkStack) - child of workbench stack */
+  GObject *workbench_home_stack_empty_history; /* (GtkLabel) - child of home stack */
+  GObject *workbench_home_stack_has_history; /* (GtkFixed) - child of home stack */
+};
+
 struct on_about_info_struct {
   GObject *statusbar;
   GObject *popup;

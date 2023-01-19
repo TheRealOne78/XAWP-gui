@@ -50,12 +50,7 @@ int main(int argc, char **argv) {
   GApplication *app;
   int status;
 
-  #ifdef G_APPLICATION_DEFAULT_FLAGS
-    app = G_APPLICATION(gtk_application_new("net.gui.XAWP", G_APPLICATION_DEFAULT_FLAGS));
-  #elif G_APPLICATIONS_FLAGS_NONE
-    app = G_APPLICATION(gtk_application_new("net.gui.XAWP", G_APPLICATION_FLAGS_NONE));
-  #endif
-
+  app = gtk_application_new("net.gui.XAWP", G_APPLICATION_FLAGS_NONE);
   g_signal_connect(app, "activate", G_CALLBACK(activate), NULL);
   status = g_application_run(G_APPLICATION(app), argc, argv);
   g_object_unref(app);
@@ -94,19 +89,8 @@ static void activate(GApplication *app, gpointer user_data) {
   GObject *window_grid_bottom_status_bar; /* (GtkStatusBar) */
 
   /* == Stacks and their childs == */
-  /* Headerbar's stack */
-  GObject *window_headerbar_grid_stack; /* (GtkStack) */
-  GObject *window_headerbar_grid_stack_0_grid; /* (GtkGrid) - child of headerbar stack */
-  GObject *window_headerbar_grid_stack_1_buttonbox; /* (GtkButtonBox) - child of headerbar stack */
-  GObject *window_headerbar_grid_stack_2_buttonbox; /* (GtkButtonBox) - child of headerbar stack */
-  /* Body's workbench stack */
-  GObject *body_workbench_stack; /* (GtkStack) */
-  GObject *workbench_config_paned; /* (GtkPaned) - child of workbench stack */
-  GObject *workbench_convert_paned; /* (GtkPaned) - child of workbench stack */
-  /* Workbench's home stack */
-  GObject *workbench_home_stack; /* (GtkStack) - child of workbench stack */
-  GObject *workbench_home_stack_empty_history; /* (GtkLabel) - child of home stack */
-  GObject *workbench_home_stack_has_history; /* (GtkFixed) - child of home stack */
+  /* To add stacks, see ./xawp-gui.h at `struct stacks` */
+  struct stacks stacks_w;
 
   /* === builder_popup === */
   /* About info */
@@ -150,16 +134,17 @@ static void activate(GApplication *app, gpointer user_data) {
   mainmenu_buttonmenu_clear_history = gtk_builder_get_object(builder_main, "mainmenu_buttonmenu_clear_history");
   mainmenu_buttonmenu_about_info = gtk_builder_get_object(builder_main, "mainmenu_buttonmenu_about_info");
   window_grid_bottom_status_bar = gtk_builder_get_object(builder_main, "window_grid_bottom_status_bar");
-  window_headerbar_grid_stack = gtk_builder_get_object(builder_main, "window_headerbar_grid_stack");
-  window_headerbar_grid_stack_0_grid = gtk_builder_get_object(builder_main, "window_headerbar_grid_stack_0_grid");
-  window_headerbar_grid_stack_1_buttonbox = gtk_builder_get_object(builder_main, "window_headerbar_grid_stack_1_buttonbox");
-  window_headerbar_grid_stack_2_buttonbox = gtk_builder_get_object(builder_main, "window_headerbar_grid_stack_2_buttonbox");
-  body_workbench_stack = gtk_builder_get_object(builder_main, "body_workbench_stack");
-  workbench_config_paned = gtk_builder_get_object(builder_main, "workbench_config_paned");
-  workbench_convert_paned = gtk_builder_get_object(builder_main, "workbench_convert_paned");
-  workbench_home_stack = gtk_builder_get_object(builder_main, "workbench_home_stack");
-  workbench_home_stack_empty_history = gtk_builder_get_object(builder_main, "workbench_home_stack_empty_history");
-  workbench_home_stack_has_history = gtk_builder_get_object(builder_main, "workbench_home_stack_has_history");
+  stacks_w.window = window;
+  stacks_w.window_headerbar_grid_stack = gtk_builder_get_object(builder_main, "window_headerbar_grid_stack");
+  stacks_w.window_headerbar_grid_stack_0_grid = gtk_builder_get_object(builder_main, "window_headerbar_grid_stack_0_grid");
+  stacks_w.window_headerbar_grid_stack_1_buttonbox = gtk_builder_get_object(builder_main, "window_headerbar_grid_stack_1_buttonbox");
+  stacks_w.window_headerbar_grid_stack_2_buttonbox = gtk_builder_get_object(builder_main, "window_headerbar_grid_stack_2_buttonbox");
+  stacks_w.body_workbench_stack = gtk_builder_get_object(builder_main, "body_workbench_stack");
+  stacks_w.workbench_config_paned = gtk_builder_get_object(builder_main, "workbench_config_paned");
+  stacks_w.workbench_convert_paned = gtk_builder_get_object(builder_main, "workbench_convert_paned");
+  stacks_w.workbench_home_stack = gtk_builder_get_object(builder_main, "workbench_home_stack");
+  stacks_w.workbench_home_stack_empty_history = gtk_builder_get_object(builder_main, "workbench_home_stack_empty_history");
+  stacks_w.workbench_home_stack_has_history = gtk_builder_get_object(builder_main, "workbench_home_stack_has_history");
   /* builder_popup */
   popup_about_info = gtk_builder_get_object(builder_popup, "popup_about_info");
   on_clear_history_dialog = gtk_builder_get_object(builder_popup, "on_clear_history_dialog");
@@ -173,16 +158,16 @@ static void activate(GApplication *app, gpointer user_data) {
 
   /* Connect signal handlers to the constructed widgets */
   g_signal_connect(window, "destroy", G_CALLBACK(gtk_main_quit), NULL);
-  g_signal_connect(window_headerbar_grid_always_buttonbox_button_select, "clicked", G_CALLBACK(on_select_configuration_file), window);
-  g_signal_connect(window_headerbar_grid_always_buttobox_button_create, "clicked", G_CALLBACK(on_create_configuration_file), window);
+  g_signal_connect(window_headerbar_grid_always_buttonbox_button_select, "clicked", G_CALLBACK(on_select_configuration_file), &stacks_w);
+  g_signal_connect(window_headerbar_grid_always_buttobox_button_create, "clicked", G_CALLBACK(on_create_configuration_file), &stacks_w);
 
-  g_signal_connect(window_headerbar_grid_stack_1_buttonbox_cancel, "clicked", G_CALLBACK(on_cancel), window);
+  g_signal_connect(window_headerbar_grid_stack_1_buttonbox_cancel, "clicked", G_CALLBACK(on_cancel), &stacks_w);
   g_signal_connect(window_headerbar_grid_stack_1_buttonbox_save, "clicked", G_CALLBACK(on_config_save), NULL);
   g_signal_connect(window_headerbar_grid_stack_1_buttonbox_set_as_default, "clicked", G_CALLBACK(on_config_set_as_default), NULL);
-
-  g_signal_connect(mainmenu_buttonmenu_select_configuration_file, "clicked", G_CALLBACK(on_select_configuration_file), window);
-  g_signal_connect(mainmenu_buttonmenu_create_configuration_file, "clicked", G_CALLBACK(on_create_configuration_file), window);
-  g_signal_connect(mainmenu_buttonmenu_convert_to_animated_images, "clicked", G_CALLBACK(on_convert_images), window);
+  g_signal_connect(window_headerbar_grid_stack_2_buttonbox_cancel, "clicked", G_CALLBACK(on_cancel), &stacks_w);
+  g_signal_connect(mainmenu_buttonmenu_select_configuration_file, "clicked", G_CALLBACK(on_select_configuration_file), &stacks_w);
+  g_signal_connect(mainmenu_buttonmenu_create_configuration_file, "clicked", G_CALLBACK(on_create_configuration_file), &stacks_w);
+  g_signal_connect(mainmenu_buttonmenu_convert_to_animated_images, "clicked", G_CALLBACK(on_convert_images), &stacks_w);
   struct on_about_info_struct on_about_info_struct_w = {
     .statusbar = window_grid_bottom_status_bar,
     .popup = on_clear_history_dialog
@@ -225,8 +210,9 @@ static GtkFileFilter *get_xawp_file_filter() {
 }
 
 static void on_select_configuration_file(GtkWidget *widget, gpointer data) {
+  struct stacks *stacks_w = (struct stacks* )data;
 
-  GObject *window = data;
+  GObject *window = stacks_w->window;
   GtkFileChooserNative *nativeChooser;
   GtkFileChooserAction action = GTK_FILE_CHOOSER_ACTION_OPEN;
   gint res;
@@ -253,6 +239,8 @@ static void on_select_configuration_file(GtkWidget *widget, gpointer data) {
     GtkFileChooser *chooser = GTK_FILE_CHOOSER(nativeChooser);
     filename = gtk_file_chooser_get_filename(chooser);
     verifyDirPath(default_config_path);
+    gtk_stack_set_visible_child(GTK_STACK(stacks_w->body_workbench_stack), GTK_WIDGET(stacks_w->workbench_config_paned));
+    gtk_stack_set_visible_child(GTK_STACK(stacks_w->window_headerbar_grid_stack), GTK_WIDGET(stacks_w->window_headerbar_grid_stack_1_buttonbox));
 
     g_free(filename);
   }
@@ -263,8 +251,9 @@ static void on_select_configuration_file(GtkWidget *widget, gpointer data) {
 }
 
 static void on_create_configuration_file(GtkWidget *widget, gpointer data) {
+  struct stacks *stacks_w = (struct stacks* )data;
 
-  GObject *window = data;
+  GObject *window = stacks_w->window;
   GtkFileChooserNative *nativeChooser;
   GtkFileChooser *chooser;
   GtkFileChooserAction action = GTK_FILE_CHOOSER_ACTION_SAVE;
@@ -290,6 +279,9 @@ static void on_create_configuration_file(GtkWidget *widget, gpointer data) {
 
     filename = gtk_file_chooser_get_filename(chooser);
     /* TODO: use this info for the next function call(s) to create a config file */
+    gtk_stack_set_visible_child(GTK_STACK(stacks_w->body_workbench_stack), GTK_WIDGET(stacks_w->workbench_config_paned));
+    gtk_stack_set_visible_child(GTK_STACK(stacks_w->window_headerbar_grid_stack), GTK_WIDGET(stacks_w->window_headerbar_grid_stack_1_buttonbox));
+
     g_free(filename);
   }
 
@@ -299,39 +291,50 @@ static void on_create_configuration_file(GtkWidget *widget, gpointer data) {
 }
 
 static void on_cancel(GtkWidget *widget, gpointer data) {
+  struct stacks *stacks_w = (struct stacks* )data;
+
   /* If the respone ID is YES, return to home, else continue to edit the config */
-  gtk_widget_show_all(GTK_WIDGET(widget));
-  gint response = gtk_dialog_run(GTK_DIALOG(widget));
-  if(response == GTK_RESPONSE_YES) {
-    // TODO: switch to home
-  }
-  gtk_widget_destroy(widget);
+  //TODO: pass the actual popup
+  //gtk_widget_show_all(GTK_WIDGET(data_popup));
+  //gint response = gtk_dialog_run(GTK_DIALOG(data_popup));
+  //if(response == GTK_RESPONSE_YES) {
+    gtk_stack_set_visible_child(GTK_STACK(stacks_w->body_workbench_stack), GTK_WIDGET(stacks_w->workbench_home_stack));
+    gtk_stack_set_visible_child(GTK_STACK(stacks_w->window_headerbar_grid_stack), GTK_WIDGET(stacks_w->window_headerbar_grid_stack_0_grid));
+  //}
+  //gtk_widget_destroy(widget);
+
 //TODO
 }
 
 static void on_config_save(GtkWidget *widget, gpointer data) {
+  struct stacks *stacks_w = (struct stacks* )data;
 
 //TODO
 }
 
 static void on_config_set_as_default(GtkWidget *widget, gpointer data) {
+  struct stacks *stacks_w = (struct stacks* )data;
 
 //TODO
 }
 
 static void on_convert_images(GtkWidget *widget, gpointer data) {
+  struct stacks *stacks_w = (struct stacks* )data;
 
+  gtk_stack_set_visible_child(GTK_STACK(stacks_w->body_workbench_stack), GTK_WIDGET(stacks_w->workbench_convert_paned));
+  gtk_stack_set_visible_child(GTK_STACK(stacks_w->window_headerbar_grid_stack), GTK_WIDGET(stacks_w->window_headerbar_grid_stack_2_buttonbox));
 //TODO
 }
 
 static void on_clear_history(GtkWidget *widget, gpointer data) {
   struct on_about_info_struct *widgets = (struct on_about_info_struct* )data;
+
   gtk_widget_show_all(GTK_WIDGET(widgets->popup));
   gint result = gtk_dialog_run(GTK_DIALOG(widgets->popup));
   if(result == GTK_RESPONSE_YES) {
     guint context_id;
     history_clear_all(&history);
-    gtk_statusbar_push(GTK_STATUSBAR(widgets->statusbar), context_id, "Cleared the history");
+    gtk_statusbar_push(GTK_STATUSBAR(widgets->statusbar), context_id, "History cleared");
   }
   else if(result == GTK_RESPONSE_NO) { }
   gtk_widget_hide(GTK_WIDGET(widgets->popup));
