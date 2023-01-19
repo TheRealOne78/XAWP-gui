@@ -85,7 +85,41 @@ int history_init(XawpHistory_t *history, char *cacheFilePath) {
     history->head = temp;
 
     if(++history->configsCount >= 50) {
-      // TODO: If more than 50, start removing older configs from cache
+      /* If the count is equal to 50, don't load files anymore and rewrite the file */
+      if(fclose(cacheFile) != 0) {
+        return errno;
+      }
+      FILE *cacheFile = fopen(history->cacheFilePath , "w+");
+      int tmperror = errno;
+
+      /* If there is no file, create return */
+      if(cacheFile == NULL) {
+        fprintf(stderr, ERR_TEXT_PUTS"Error creating or opening the file %s\n", history->cacheFilePath);
+        return tmperror;
+      }
+
+      /* Now load every config from the linked list to the cache file */
+      char *line = NULL;
+      size_t len = 0;
+      ssize_t read;
+
+      temp = history->head;
+      while(1) {
+        if(temp->next != NULL)
+          temp = temp->next;
+        else {
+          /* if temp1->next is NULL, don't forget to save the last conf file to cache */
+          fprintf(cacheFile, "%s", temp->confFilePath);
+          break;
+        }
+
+        fprintf(cacheFile, "%s", temp->confFilePath);
+      }
+      fflush(cacheFile);
+
+      if(fclose(cacheFile) != 0) {
+        return errno;
+      }
       break;
     }
   }
@@ -160,10 +194,42 @@ int history_set_list(XawpHistory_t *history, char *configPath) {
     strcpy(temp->confFilePath, configPath);
     temp->next = history->head;
     history->head = temp;
+    history->configsCount++;
+  }
+
+  FILE *cacheFile = fopen(history->cacheFilePath , "w+");
+  int tmperror = errno;
+
+  /* If there is no file, create return */
+  if(cacheFile == NULL) {
+    fprintf(stderr, ERR_TEXT_PUTS"Error creating or opening the file %s\n", history->cacheFilePath);
+    return tmperror;
+  }
+
+  /* Now load every config from the linked list to the cache file */
+  char *line = NULL;
+  size_t len = 0;
+  ssize_t read;
+
+  temp = history->head;
+  while(1) {
+    if(temp->next != NULL)
+      temp = temp->next;
+    else {
+      /* if temp1->next is NULL, don't forget to save the last conf file to cache */
+      fprintf(cacheFile, "%s", temp->confFilePath);
+      break;
+    }
+
+    fprintf(cacheFile, "%s", temp->confFilePath);
+  }
+  fflush(cacheFile);
+
+  if(fclose(cacheFile) != 0) {
+    return errno;
   }
 
   return 0;
-  //TODO: add to cache file the conf file
 }
 
 int history_get_list(char dest[PATH_MAX], XawpHistory_t *history, uint8_t index) {
@@ -187,7 +253,6 @@ int history_get_list(char dest[PATH_MAX], XawpHistory_t *history, uint8_t index)
   }
 
   return 0;
-//TODO: verify if this is correct
 }
 
 int history_clear_element(XawpHistory_t *history, uint8_t index) {
@@ -195,8 +260,66 @@ int history_clear_element(XawpHistory_t *history, uint8_t index) {
   /* This setter function clears a specific path value at a specific index of a
    * XawpHistory_t type linked list and it's text element inside cache file. */
 
-  XawpHistoryLinkedList_t *temp;
-//TODO
+  if(index == 0) {
+    fprintf(stderr, ERR_TEXT_PUTS"Index 0 is not valid. Can't clear element from cache file\n");
+    return 1;
+  }
+
+  if(history->head == NULL) {
+    fprintf(stdout, INFO_TEXT_PUTS"Head is NULL. Returning.\n");
+    return -1;
+  }
+
+  XawpHistoryLinkedList_t *temp1 = history->head;
+  /* If index position is 1, traversing the list is useless */
+  if(index == 1) {
+    history->head = temp1->next;
+    free(temp1);
+    return 0;
+  }
+
+  /* Traverse the list to index position - 2 */
+  for(int i = 0; i < index - 2; i++)
+    temp1 = temp1->next;
+
+  /* Fix links and free the old node */
+  XawpHistoryLinkedList_t *temp2 = temp1->next;
+  temp1->next = temp2->next;
+  free(temp2);
+
+  FILE *cacheFile = fopen(history->cacheFilePath , "w+");
+  int tmperror = errno;
+
+  /* If there is no file, create return */
+    if(cacheFile == NULL) {
+      fprintf(stderr, ERR_TEXT_PUTS"Error creating or opening the file %s\n", history->cacheFilePath);
+      return tmperror;
+    }
+
+  /* Now load every config from the linked list to the cache file */
+  char *line = NULL;
+  size_t len = 0;
+  ssize_t read;
+
+  temp1 = history->head;
+  while(1) {
+    if(temp1->next != NULL)
+      temp1 = temp1->next;
+    else {
+      /* if temp1->next is NULL, don't forget to save the last conf file to cache */
+      fprintf(cacheFile, "%s", temp1->confFilePath);
+      break;
+    }
+
+    fprintf(cacheFile, "%s", temp1->confFilePath);
+  }
+  fflush(cacheFile);
+
+  if(fclose(cacheFile) != 0) {
+    return errno;
+  }
+
+  return 0;
 }
 
 int history_clear_all(XawpHistory_t *history) {

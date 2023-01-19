@@ -185,8 +185,6 @@ static void activate(GApplication *app, gpointer user_data) {
   g_signal_connect(mainmenu_buttonmenu_clear_history, "clicked", G_CALLBACK(on_clear_history), &on_about_info_struct_w);
   g_signal_connect(mainmenu_buttonmenu_about_info, "clicked", G_CALLBACK(on_about_info), popup_about_info);
 
-  g_signal_connect(popup_about_info, "response", G_CALLBACK(close_about_dialog), NULL);
-
   /* Give response IDs */
   /* config cancel dialog buttons */
   gtk_dialog_add_action_widget(GTK_DIALOG(on_clear_history_dialog), GTK_WIDGET(on_clear_history_vbox_buttonbox_button_yes), GTK_RESPONSE_YES);
@@ -332,16 +330,11 @@ static void on_clear_history(GtkWidget *widget, gpointer data) {
   }
   else if(result == GTK_RESPONSE_NO) { }
   gtk_widget_hide(GTK_WIDGET(widgets->popup));
-  //TODO
 }
 
 static void on_about_info(GtkWidget *widget, gpointer data) {
   /* Run the about info dialog */
   gtk_widget_show_all(GTK_WIDGET(data));
-  gtk_dialog_run(GTK_DIALOG(data));
-}
-
-static void close_about_dialog(GtkAboutDialog *popup_about_info, gint response_id, gpointer data) {
-  /* Hide the about info dialog when user closes it */
-  gtk_widget_hide(GTK_WIDGET(popup_about_info));
+  gint respone = gtk_dialog_run(GTK_DIALOG(data));
+  gtk_widget_hide(GTK_WIDGET(data));
 }
