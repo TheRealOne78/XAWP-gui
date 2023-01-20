@@ -264,6 +264,10 @@
                         <property name="name">workbench_home_stack_empty-history</property>
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
+                        <property name="margin-start">2</property>
+                        <property name="margin-end">2</property>
+                        <property name="margin-top">2</property>
+                        <property name="margin-bottom">2</property>
                         <property name="label" translatable="yes">Looks like the history is empty.
 Select or Create '+' a new configuration file to begin.</property>
                         <property name="justify">center</property>
@@ -278,6 +282,10 @@ Select or Create '+' a new configuration file to begin.</property>
                       <object class="GtkBox" id="workbench_home_stack_has_history">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
+                        <property name="margin-start">2</property>
+                        <property name="margin-end">2</property>
+                        <property name="margin-top">2</property>
+                        <property name="margin-bottom">2</property>
                         <property name="orientation">vertical</property>
                         <child>
                           <placeholder/>
@@ -309,6 +317,8 @@ Select or Create '+' a new configuration file to begin.</property>
                         <property name="can-focus">False</property>
                         <property name="margin-start">2</property>
                         <property name="margin-end">2</property>
+                        <property name="margin-top">2</property>
+                        <property name="margin-bottom">2</property>
                         <property name="orientation">vertical</property>
                         <child>
                           <object class="GtkBox" id="config_body_animation_directory_box">
@@ -352,6 +362,8 @@ Select or Create '+' a new configuration file to begin.</property>
                                     <property name="visible">True</property>
                                     <property name="can-focus">True</property>
                                     <property name="receives-default">True</property>
+                                    <property name="halign">start</property>
+                                    <property name="hexpand">False</property>
                                     <child>
                                       <object class="GtkImage" id="config_body_animation_directory_box_button_box_button_image_open">
                                         <property name="visible">True</property>
@@ -504,6 +516,8 @@ Select or Create '+' a new configuration file to begin.</property>
                                     <property name="visible">True</property>
                                     <property name="can-focus">True</property>
                                     <property name="receives-default">True</property>
+                                    <property name="halign">start</property>
+                                    <property name="hexpand">False</property>
                                     <child>
                                       <object class="GtkImage" id="config_body_directory_path_box_button_box_button_image_file">
                                         <property name="visible">True</property>
@@ -567,7 +581,7 @@ Select or Create '+' a new configuration file to begin.</property>
                                   <item translatable="yes">Top-right</item>
                                 </items>
                                 <child internal-child="entry">
-                                  <object class="GtkEntry">
+                                  <object class="GtkEntry" id="config_body_fit_combo_box_text_entry">
                                     <property name="can-focus">False</property>
                                   </object>
                                 </child>
@@ -699,6 +713,8 @@ Select or Create '+' a new configuration file to begin.</property>
                         <property name="margin-right">2</property>
                         <property name="margin-start">2</property>
                         <property name="margin-end">2</property>
+                        <property name="margin-top">2</property>
+                        <property name="margin-bottom">2</property>
                         <property name="orientation">vertical</property>
                         <child>
                           <object class="GtkBox" id="convert_body_animation_directory_box1">
@@ -744,6 +760,9 @@ Select or Create '+' a new configuration file to begin.</property>
                                     <property name="visible">True</property>
                                     <property name="can-focus">True</property>
                                     <property name="receives-default">True</property>
+                                    <property name="halign">start</property>
+                                    <property name="hexpand">False</property>
+                                    <property name="vexpand">False</property>
                                     <child>
                                       <object class="GtkImage" id="convert_body_animation_directory_box_button_box_button_image_open">
                                         <property name="visible">True</property>
@@ -816,6 +835,9 @@ Select or Create '+' a new configuration file to begin.</property>
                                     <property name="visible">True</property>
                                     <property name="can-focus">True</property>
                                     <property name="receives-default">True</property>
+                                    <property name="halign">start</property>
+                                    <property name="hexpand">False</property>
+                                    <property name="vexpand">False</property>
                                     <child>
                                       <object class="GtkImage" id="convert_body_entry_box_button_box_box_button_image_open">
                                         <property name="visible">True</property>
@@ -1026,10 +1048,14 @@ Select or Create '+' a new configuration file to begin.</property>
           <object class="GtkGrid" id="window_headerbar_grid_workbench">
             <property name="visible">True</property>
             <property name="can-focus">False</property>
+            <property name="halign">start</property>
+            <property name="hexpand">False</property>
             <child>
               <object class="GtkStack" id="window_headerbar_grid_stack">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
+                <property name="halign">start</property>
+                <property name="hexpand">False</property>
                 <child>
                   <!-- n-columns=1 n-rows=1 -->
                   <object class="GtkGrid" id="window_headerbar_grid_stack_0_grid">
@@ -1048,6 +1074,7 @@ Select or Create '+' a new configuration file to begin.</property>
                   <object class="GtkButtonBox" id="window_headerbar_grid_stack_1_buttonbox">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
+                    <property name="homogeneous">True</property>
                     <property name="layout-style">expand</property>
                     <child>
                       <object class="GtkButton" id="window_headerbar_grid_stack_1_buttonbox_cancel">
@@ -1056,11 +1083,10 @@ Select or Create '+' a new configuration file to begin.</property>
                         <property name="can-focus">True</property>
                         <property name="receives-default">True</property>
                         <property name="tooltip-text" translatable="yes">Cancel</property>
-                        <property name="hexpand">False</property>
                         <property name="image">icon_cancel</property>
                       </object>
                       <packing>
-                        <property name="expand">False</property>
+                        <property name="expand">True</property>
                         <property name="fill">True</property>
                         <property name="position">2</property>
                       </packing>
@@ -1075,7 +1101,7 @@ Select or Create '+' a new configuration file to begin.</property>
                         <property name="image">icon_save</property>
                       </object>
                       <packing>
-                        <property name="expand">False</property>
+                        <property name="expand">True</property>
                         <property name="fill">True</property>
                         <property name="position">2</property>
                       </packing>
@@ -1087,11 +1113,12 @@ Select or Create '+' a new configuration file to begin.</property>
                         <property name="can-focus">True</property>
                         <property name="receives-default">True</property>
                         <property name="tooltip-text" translatable="yes">Set as the default configuration file</property>
+                        <property name="hexpand">False</property>
                         <property name="image">icon_apply</property>
                       </object>
                       <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
+                        <property name="expand">True</property>
+                        <property name="fill">False</property>
                         <property name="position">2</property>
                       </packing>
                     </child>
@@ -1106,6 +1133,9 @@ Select or Create '+' a new configuration file to begin.</property>
                   <object class="GtkButtonBox" id="window_headerbar_grid_stack_2_buttonbox">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
+                    <property name="halign">start</property>
+                    <property name="hexpand">False</property>
+                    <property name="homogeneous">True</property>
                     <property name="layout-style">expand</property>
                     <child>
                       <object class="GtkButton" id="window_headerbar_grid_stack_2_buttonbox_cancel">
@@ -1118,7 +1148,7 @@ Select or Create '+' a new configuration file to begin.</property>
                         <property name="image">icon_cancel1</property>
                       </object>
                       <packing>
-                        <property name="expand">False</property>
+                        <property name="expand">True</property>
                         <property name="fill">True</property>
                         <property name="position">2</property>
                       </packing>
@@ -1130,11 +1160,13 @@ Select or Create '+' a new configuration file to begin.</property>
                         <property name="can-focus">True</property>
                         <property name="receives-default">True</property>
                         <property name="tooltip-text" translatable="yes">Save</property>
+                        <property name="halign">start</property>
+                        <property name="hexpand">False</property>
                         <property name="image">icon_convert</property>
                       </object>
                       <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
+                        <property name="expand">True</property>
+                        <property name="fill">False</property>
                         <property name="position">2</property>
                       </packing>
                     </child>
@@ -1173,6 +1205,8 @@ Select or Create '+' a new configuration file to begin.</property>
                     <property name="can-focus">True</property>
                     <property name="receives-default">True</property>
                     <property name="tooltip-text" translatable="yes">Select a configuration file and edit it</property>
+                    <property name="halign">end</property>
+                    <property name="hexpand">False</property>
                     <property name="image">icon_open</property>
                   </object>
                   <packing>
@@ -1188,6 +1222,8 @@ Select or Create '+' a new configuration file to begin.</property>
                     <property name="can-focus">True</property>
                     <property name="receives-default">True</property>
                     <property name="tooltip-text" translatable="yes">Create a configuration file and edit it</property>
+                    <property name="halign">end</property>
+                    <property name="hexpand">False</property>
                     <property name="image">icon_create</property>
                   </object>
                   <packing>
