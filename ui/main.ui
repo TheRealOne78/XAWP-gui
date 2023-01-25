@@ -89,8 +89,8 @@
                     <property name="halign">center</property>
                     <property name="hexpand">False</property>
                     <property name="xpad">10</property>
-                    <property name="ypad">20</property>
-                    <property name="pixbuf">../icons/logo_250x66.png</property>
+                    <property name="ypad">10</property>
+                    <property name="pixbuf">../icons/logo_gradient_236x66_v2.svg</property>
                   </object>
                   <packing>
                     <property name="left-attach">0</property>
