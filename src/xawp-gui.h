@@ -25,8 +25,9 @@
 #endif
 
 struct stacks {
-  /* == Stacks and their childs == */
   GObject *window;
+  /* == Stacks and their childs == */
+  GObject *window_headerbar;
   /* Headerbar's stack */
   GObject *window_headerbar_grid_stack; /* (GtkStack) */
   GObject *window_headerbar_grid_stack_0_grid; /* (GtkGrid) - child of headerbar stack */
@@ -45,6 +46,11 @@ struct stacks {
 struct on_about_info_struct {
   GObject *statusbar;
   GObject *popup;
+};
+
+struct on_cancel_struct {
+  struct stacks *stacks_struct;
+  GObject *popup_cancel_w;
 };
 
 /* Activate Gtk */
