@@ -31,6 +31,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <errno.h>
+#include <libgen.h>
 
 /* XAWP created headers */
 #include "info.h"
@@ -135,6 +136,7 @@ static void activate(GApplication *app, gpointer user_data) {
   mainmenu_buttonmenu_about_info = gtk_builder_get_object(builder_main, "mainmenu_buttonmenu_about_info");
   window_grid_bottom_status_bar = gtk_builder_get_object(builder_main, "window_grid_bottom_status_bar");
   stacks_w.window = window;
+  stacks_w.window_headerbar = window_headerbar;
   stacks_w.window_headerbar_grid_stack = gtk_builder_get_object(builder_main, "window_headerbar_grid_stack");
   stacks_w.window_headerbar_grid_stack_0_grid = gtk_builder_get_object(builder_main, "window_headerbar_grid_stack_0_grid");
   stacks_w.window_headerbar_grid_stack_1_buttonbox = gtk_builder_get_object(builder_main, "window_headerbar_grid_stack_1_buttonbox");
@@ -161,10 +163,14 @@ static void activate(GApplication *app, gpointer user_data) {
   g_signal_connect(window_headerbar_grid_always_buttonbox_button_select, "clicked", G_CALLBACK(on_select_configuration_file), &stacks_w);
   g_signal_connect(window_headerbar_grid_always_buttobox_button_create, "clicked", G_CALLBACK(on_create_configuration_file), &stacks_w);
 
-  g_signal_connect(window_headerbar_grid_stack_1_buttonbox_cancel, "clicked", G_CALLBACK(on_cancel), &stacks_w);
+  struct on_cancel_struct on_cancel_struct_w = {
+    .stacks_struct = &stacks_w,
+    .popup_cancel_w = popup_cancel
+  };
+  g_signal_connect(window_headerbar_grid_stack_1_buttonbox_cancel, "clicked", G_CALLBACK(on_cancel), &on_cancel_struct_w);
   g_signal_connect(window_headerbar_grid_stack_1_buttonbox_save, "clicked", G_CALLBACK(on_config_save), NULL);
   g_signal_connect(window_headerbar_grid_stack_1_buttonbox_set_as_default, "clicked", G_CALLBACK(on_config_set_as_default), NULL);
-  g_signal_connect(window_headerbar_grid_stack_2_buttonbox_cancel, "clicked", G_CALLBACK(on_cancel), &stacks_w);
+  g_signal_connect(window_headerbar_grid_stack_2_buttonbox_cancel, "clicked", G_CALLBACK(on_cancel), &on_cancel_struct_w);
   g_signal_connect(mainmenu_buttonmenu_select_configuration_file, "clicked", G_CALLBACK(on_select_configuration_file), &stacks_w);
   g_signal_connect(mainmenu_buttonmenu_create_configuration_file, "clicked", G_CALLBACK(on_create_configuration_file), &stacks_w);
   g_signal_connect(mainmenu_buttonmenu_convert_to_animated_images, "clicked", G_CALLBACK(on_convert_images), &stacks_w);
@@ -185,7 +191,7 @@ static void activate(GApplication *app, gpointer user_data) {
   gtk_dialog_add_action_widget(GTK_DIALOG(popup_error), GTK_WIDGET(popup_error_button_ok), GTK_RESPONSE_OK);
 
   /* Do all miscellaneous things for initial setup */
-  gtk_header_bar_set_title(GTK_HEADER_BAR(gtk_builder_get_object(builder_main, "window_headerbar")), "XAWP-gui");
+  gtk_header_bar_set_title(GTK_HEADER_BAR(window_headerbar), "XAWP-gui");
   gtk_window_set_transient_for(GTK_WINDOW(popup_about_info), GTK_WINDOW(window));
   gtk_window_set_transient_for(GTK_WINDOW(on_clear_history_dialog), GTK_WINDOW(window));
   gtk_window_set_transient_for(GTK_WINDOW(popup_cancel), GTK_WINDOW(window));
@@ -239,6 +245,7 @@ static void on_select_configuration_file(GtkWidget *widget, gpointer data) {
     GtkFileChooser *chooser = GTK_FILE_CHOOSER(nativeChooser);
     filename = gtk_file_chooser_get_filename(chooser);
     verifyDirPath(default_config_path);
+    gtk_header_bar_set_subtitle(GTK_HEADER_BAR(stacks_w->window_headerbar), basename(filename));
     gtk_stack_set_visible_child(GTK_STACK(stacks_w->body_workbench_stack), GTK_WIDGET(stacks_w->workbench_config_paned));
     gtk_stack_set_visible_child(GTK_STACK(stacks_w->window_headerbar_grid_stack), GTK_WIDGET(stacks_w->window_headerbar_grid_stack_1_buttonbox));
 
@@ -279,6 +286,7 @@ static void on_create_configuration_file(GtkWidget *widget, gpointer data) {
 
     filename = gtk_file_chooser_get_filename(chooser);
     /* TODO: use this info for the next function call(s) to create a config file */
+    gtk_header_bar_set_subtitle(GTK_HEADER_BAR(stacks_w->window_headerbar), basename(filename));
     gtk_stack_set_visible_child(GTK_STACK(stacks_w->body_workbench_stack), GTK_WIDGET(stacks_w->workbench_config_paned));
     gtk_stack_set_visible_child(GTK_STACK(stacks_w->window_headerbar_grid_stack), GTK_WIDGET(stacks_w->window_headerbar_grid_stack_1_buttonbox));
 
@@ -291,23 +299,58 @@ static void on_create_configuration_file(GtkWidget *widget, gpointer data) {
 }
 
 static void on_cancel(GtkWidget *widget, gpointer data) {
-  struct stacks *stacks_w = (struct stacks* )data;
-
+  struct on_cancel_struct *on_cancel_struct_w = (struct on_cancel_struct* )data;
   /* If the respone ID is YES, return to home, else continue to edit the config */
   //TODO: pass the actual popup
-  //gtk_widget_show_all(GTK_WIDGET(data_popup));
-  //gint response = gtk_dialog_run(GTK_DIALOG(data_popup));
-  //if(response == GTK_RESPONSE_YES) {
-    gtk_stack_set_visible_child(GTK_STACK(stacks_w->body_workbench_stack), GTK_WIDGET(stacks_w->workbench_home_stack));
-    gtk_stack_set_visible_child(GTK_STACK(stacks_w->window_headerbar_grid_stack), GTK_WIDGET(stacks_w->window_headerbar_grid_stack_0_grid));
-  //}
-  //gtk_widget_destroy(widget);
-
-//TODO
+  gtk_widget_show_all(GTK_WIDGET(on_cancel_struct_w->popup_cancel_w));
+  gint response = gtk_dialog_run(GTK_DIALOG(on_cancel_struct_w->popup_cancel_w));
+  if(response == GTK_RESPONSE_YES) {
+    gtk_header_bar_set_subtitle(GTK_HEADER_BAR(on_cancel_struct_w->stacks_struct->window_headerbar), "");
+    gtk_stack_set_visible_child(GTK_STACK(on_cancel_struct_w->stacks_struct->body_workbench_stack), GTK_WIDGET(on_cancel_struct_w->stacks_struct->workbench_home_stack));
+    gtk_stack_set_visible_child(GTK_STACK(on_cancel_struct_w->stacks_struct->window_headerbar_grid_stack), GTK_WIDGET(on_cancel_struct_w->stacks_struct->window_headerbar_grid_stack_0_grid));
+  }
+  gtk_widget_hide(GTK_WIDGET(on_cancel_struct_w->popup_cancel_w));
 }
 
 static void on_config_save(GtkWidget *widget, gpointer data) {
   struct stacks *stacks_w = (struct stacks* )data;
+
+  /* Save a XAWP configuration with all it's values */
+
+  //fprintf(fp, "### %s - generated with XAWP-gui\n", basename(filename));
+  //fprintf(fp, "# v%s\n", VERSION);
+  //fprintf(fp, "#\n");
+  //fprintf(fp, "#  /$$   /$$  /$$$$$$  /$$      /$$ /$$$$$$$\n");
+  //fprintf(fp, "# | $$  / $$ /$$__  $$| $$  /$ | $$| $$__  $$\n");
+  //fprintf(fp, "# |  $$/ $$/| $$  \\ $$| $$ /$$$| $$| $$  \\ $$\n");
+  //fprintf(fp, "#  \\  $$$$/ | $$$$$$$$| $$/$$ $$ $$| $$$$$$$/\n");
+  //fprintf(fp, "#   >$$  $$ | $$__  $$| $$$$_  $$$$| $$____/\n");
+  //fprintf(fp, "#  /$$/\\  $$| $$  | $$| $$$/ \\  $$$| $$\n");
+  //fprintf(fp, "# | $$  \\ $$| $$  | $$| $$/   \\  $$| $$\n");
+  //fprintf(fp, "# |__/  |__/|__/  |__/|__/     \\__/|__/\n");
+  //fprintf(fp, "#\n");
+  //fprintf(fp, "# See wiki page for more info:\n");
+  //fprintf(fp, "# https://github.com/TheRealOne78/XAWP/wiki\n");
+  //fprintf(fp, "\n");
+  //fprintf(fp, "### Path to images directory\n");
+  //fprintf(fp, "# It needs to contain every frame xawp should display\n");
+  //fprintf(fp, "path = \"%s\"\n", path);
+  //fprintf(fp, "\n");
+  //fprintf(fp, "### Time\n");
+  //fprintf(fp, "# Set time to pause between 2 frames\n");
+  //fprintf(fp, "time = %lf\n", time);
+  //fprintf(fp, "\n");
+  //fprintf(fp, "### Debug\n");
+  //fprintf(fp, "# If true, debug info will start display\n");
+  //fprintf(fp, "debug = %s\n", debug);
+  //fprintf(fp, "\n");
+  //fprintf(fp, "### Static Image Wallpaper\n");
+  //fprintf(fp, "# If uncommented, XAWP will set the wallpaper and exit\n");
+
+  //if(static_wallpaper_bool)
+  //  fprintf(fp, "static-wallpaper = \"%s\"\n", static_wallpaper);
+  //else
+  //  fprintf(fp, "#static-wallpaper = \"%s\"\n", static_wallpaper);
 
 //TODO
 }
