@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://i.imgur.com/DxCHBP5.png" width="50%">
+  <img src="./icons/logo_gradient_v2.svg" width="50%">
 </p>
 
 # XAWP - gui
