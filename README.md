@@ -9,6 +9,7 @@ Written in C with the GTK+ toolkit.
 
 ## TODO:
 * [X] Create a basic GTK UI
+* [ ] Add a fancy history list in the start menu with image preview and options
 * [X] Create a [SVG logo](./icons/logo_gradient_v2.svg) with X derived from the [Xorg/X11 logo](https://www.x.org/wiki/)
 * [ ] Get values from config file with libconfig
 * [ ] Write configuration text with the C file stream
