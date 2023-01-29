@@ -99,10 +99,6 @@ int history_init(XawpHistory_t *history, char *cacheFilePath) {
       }
 
       /* Now load every config from the linked list to the cache file */
-      char *line = NULL;
-      size_t len = 0;
-      ssize_t read;
-
       temp = history->head;
       while(1) {
         if(temp->next != NULL)
@@ -189,13 +185,11 @@ int history_set_list(XawpHistory_t *history, char *configPath) {
 
   XawpHistoryLinkedList_t *temp;
 
-  if(history->head != NULL) {
-    temp = (XawpHistoryLinkedList_t* )malloc(sizeof(XawpHistoryLinkedList_t));
-    strcpy(temp->confFilePath, configPath);
-    temp->next = history->head;
-    history->head = temp;
-    history->configsCount++;
-  }
+  temp = (XawpHistoryLinkedList_t* )malloc(sizeof(XawpHistoryLinkedList_t));
+  strcpy(temp->confFilePath, configPath);
+  temp->next = history->head;
+  history->head = temp;
+  history->configsCount++;
 
   FILE *cacheFile = fopen(history->cacheFilePath , "w+");
   int tmperror = errno;
@@ -207,12 +201,9 @@ int history_set_list(XawpHistory_t *history, char *configPath) {
   }
 
   /* Now load every config from the linked list to the cache file */
-  char *line = NULL;
-  size_t len = 0;
-  ssize_t read;
-
   temp = history->head;
   while(1) {
+    fprintf(cacheFile, "%s", temp->confFilePath);
     if(temp->next != NULL)
       temp = temp->next;
     else {
@@ -220,8 +211,6 @@ int history_set_list(XawpHistory_t *history, char *configPath) {
       fprintf(cacheFile, "%s", temp->confFilePath);
       break;
     }
-
-    fprintf(cacheFile, "%s", temp->confFilePath);
   }
   fflush(cacheFile);
 
@@ -297,10 +286,6 @@ int history_clear_element(XawpHistory_t *history, uint8_t index) {
     }
 
   /* Now load every config from the linked list to the cache file */
-  char *line = NULL;
-  size_t len = 0;
-  ssize_t read;
-
   temp1 = history->head;
   while(1) {
     if(temp1->next != NULL)

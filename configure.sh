@@ -113,7 +113,7 @@ $ERR For more info, see https://wiki.gentoo.org/wiki/Emerge and https://wiki.gen
   ### OpenBSD
   elif [ -x "$(command -v pkg_add)" ]; then
     printf "$INFO pkg_add detected\n"
-    printf "$WARN If you are using OpenBSD, you might not have a good desktop experience because of OpenBSD's lack of desktop support.\n"
+    printf "$WARN If you are using OpenBSD, you might not have a good desktop experience because of OpenBSD's lack of graphics drivers support for nVidia GPUs.\n"
     PKG_MGR="pkg_add"
 
   ### NetBSD
@@ -127,6 +127,7 @@ $ERR For more info, see https://wiki.gentoo.org/wiki/Emerge and https://wiki.gen
   $ERR Please install$DEPENDENCIES manually and run this file again to compile and install XAWP in your system!\n"
     exit 1
   fi
+
   printf "$INFO $PKG_MGR will install the required dependencies\n"
   # Install dependencies
   ## Debian

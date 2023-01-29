@@ -43,9 +43,9 @@ void formatPath(char *path, char formattedPath[PATH_MAX]) {
     if(homeDir != NULL) {
       size_t homeDir_len = strlen(homeDir);
       size_t path_len = strlen(path);
-       if(homeDir_len + path_len < PATH_MAX) {
-         strcpy(formattedPath, homeDir);
-         strcat(formattedPath, path+1);
+      if(homeDir_len + path_len < PATH_MAX) {
+        strcpy(formattedPath, homeDir);
+        strcat(formattedPath, path+1);
       }
     }
     else {
@@ -67,7 +67,7 @@ void verifyDirPath(char path[PATH_MAX]) {
    * Thanks to OpenAI's ChatGPT for all the help!
    */
 
-  if (access(path, F_OK) == 0) {
+  if(access(path, F_OK) == 0) {
     /* Default config dir exists */
     return;
   }

@@ -8,7 +8,7 @@ BUILD_DIR = ./build/
 BIN_INSTALL_DIR = /usr/bin/
 
 UI = ./ui/*.ui
-ICO = ./icons/*.png
+ICO = ./icons/*.svg
 USR_SHARE_DIR = /usr/share/
 RES_INSTALL_DIR = $(USR_SHARE_DIR)xawp/
 UI_INSTALL_DIR = $(RES_INSTALL_DIR)ui/
