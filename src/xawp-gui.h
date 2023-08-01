@@ -20,10 +20,14 @@
 #ifndef __XAWP_GUI_H__
 # define __XAWP_GUI_H__
 
+/* ==DEFINES== */
 #ifndef DEFAULT_CONFIG_PATH
 # define DEFAULT_CONFIG_PATH "~/.config/xawp/"
 #endif
 
+/* ==STRUCTS== */
+
+/* All stacks */
 struct stacks {
   GObject *window;
   /* == Stacks and their childs == */
@@ -43,15 +47,19 @@ struct stacks {
   GObject *workbench_home_stack_has_history; /* (GtkFixed) - child of home stack */
 };
 
+/* About info */
 struct on_about_info_struct {
   GObject *statusbar;
   GObject *popup;
 };
 
+/* Cancel */
 struct on_cancel_struct {
   struct stacks *stacks_struct;
   GObject *popup_cancel_w;
 };
+
+/* ==FUNCTIONS== */
 
 /* Activate Gtk */
 static void activate();

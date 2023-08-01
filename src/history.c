@@ -151,7 +151,7 @@ int history_refresh(XawpHistory_t *history) {
 int history_unref(XawpHistory_t *history) {
 
   /* This unreference functions makes sure every byte from the passed struct is
-   * dealocated. Mostly used when cleaning up before exiting. */
+   * deallocated. Mostly used when cleaning up before exiting. */
 
   /* NULL every char of history->cacheFilePath string */
   memset(history->cacheFilePath, '\0', sizeof(history->cacheFilePath));

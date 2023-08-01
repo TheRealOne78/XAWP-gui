@@ -20,6 +20,8 @@
 #ifndef __HISTORY_H__
 # define __HISTORY_H__
 
+/* ==DEFINE== */
+
 #ifndef HISTORY_MAX
 # define HISTORY_MAX 50
 #endif
@@ -28,6 +30,13 @@
 # define HISTORY_DEFAULT_PATH "~/.cache/xawp/history.txt"
 #endif
 
+
+/* ==STRUCTS== */
+
+/*
+ * XawpHistoryLinkedList_t
+ * Contains the linked list of config paths
+ */
 typedef struct XawpHistoryLinkedList {
   /* Path data */
   char confFilePath[PATH_MAX];
@@ -35,6 +44,10 @@ typedef struct XawpHistoryLinkedList {
   struct XawpHistoryLinkedList *next;
 } XawpHistoryLinkedList_t;
 
+/*
+ * XawpHistory_t
+ * Contains the XawpHistoryLinkedList linked list and indexing variables
+ */
 typedef struct XawpHistory {
   /* The cache file */
   char cacheFilePath[PATH_MAX];
@@ -42,19 +55,73 @@ typedef struct XawpHistory {
   /* Number of elements in the linked list */
   uint64_t configsCount;
 
+  /* Head of linked list */
   XawpHistoryLinkedList_t *head;
+
+  /* Last item pointer */
+  XawpHistoryLinkedList_t *lastPtr;
 } XawpHistory_t;
 
-int history_init(XawpHistory_t *history, char *cacheFilePath);
-int history_refresh(XawpHistory_t *history);
-int history_unref(XawpHistory_t *history);
+
+/* ==FUNCTIONS== */
+
+/*
+ * This init function initiates everything necessary into XawpHistory_t like
+ * loading the config paths from the cache file into the linked list.
+ */
+int history_init(
+    XawpHistory_t *history,  /* History structure to save on */
+    char *cacheFilePath);    /* History file to read from */
+
+/*
+ * This function refreshes the linked list from the struct to an updated list
+ * of config paths.
+ */
+int history_refresh(
+    XawpHistory_t *history); /* History structure to refresh */
+
+/*
+ * This unreference functions makes sure every byte from the passed struct is
+ * deallocated. Mostly used when cleaning up before exiting.
+ */
+int history_unref(
+    XawpHistory_t *history); /* History structure to deallocate */
+
 
 /* Getters and setters */
-int history_set_list(XawpHistory_t *history, char *configPath);
-int history_get_list(char dest[PATH_MAX], XawpHistory_t *history, uint8_t index);
+
+/*
+ * This setter function sets a new path at the begining of a XawpHistory_t
+ * type linked list and it's cache file.
+ */
+int history_set_list(
+    XawpHistory_t *history,  /* History structure to set value */
+    char *configPath);       /* Path value to set */
+
+/* This getter function gets a path at a specific index of a XawpHistory_t
+ * type linked list and it's cache file.
+ */
+int history_get_list(
+    char dest[PATH_MAX],     /* Destination string array */
+    XawpHistory_t *history,  /* History structure to get element from */
+    uint8_t index);          /* Index to set element */
+
 
 /* Clear history functions */
-int history_clear_element(XawpHistory_t *history, uint8_t index);
-int history_clear_all(XawpHistory_t *history);
+
+/*
+ * This setter function clears a specific path value at a specific index of a
+ * XawpHistory_t type linked list and it's text element inside cache file.
+ */
+int history_clear_element(
+    XawpHistory_t *history,  /* History structure to clear */
+    uint8_t index);          /* Index to clear element */
+
+/* This function clears all the path values inside a XawpHistory_t type
+ * linked list and the text inside it's cache file.
+ */
+int history_clear_all(
+    XawpHistory_t *history); /* History structure to clear */
+
 
 #endif

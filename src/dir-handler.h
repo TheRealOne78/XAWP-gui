@@ -20,6 +20,9 @@
 #ifndef __DIR_CHECKER_H__
 # define __DIR_CHECKER_H__
 
+
+/* ==DEFINE== */
+
 /* Get the maximum path size based of
  * different operating systems. */
 #ifndef PATH_MAX
@@ -29,10 +32,32 @@
     #include <limits.h>
   #elif __APPLE__
     #include <limits.h>
-  #endif
-#endif
+  #endif /* __linux__ */
+#endif /* PATH_MAX */
 
-void formatPath(char *path, char formattedPath[PATH_MAX]);
-void verifyDirPath(char path[PATH_MAX]);
 
-#endif
+/* ==FUNCTIONS== */
+
+/*
+ * This function checks if the first character is a '~'.
+ * If so, this function will replace the '~' with a propper
+ * "/home/user/" path.
+ *
+ * Thanks to OpenAI's ChatGPT for all the help!
+ */
+void formatPath(
+    char *path,                    /* Path to be formatted */
+    char formattedPath[PATH_MAX]); /* Formatted path */
+
+/*
+ * This function checks and creates directories for the
+ * taget directory through an iteration, like `mkdir -p`
+ * does.
+ *
+ * Thanks to OpenAI's ChatGPT for all the help!
+ */
+void verifyDirPath(
+    char path[PATH_MAX]);          /* Path to check and create directory */
+
+
+#endif /* __DIR_CHECKER_H__ */

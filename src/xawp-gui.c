@@ -109,6 +109,9 @@ static void activate(GApplication *app, gpointer user_data) {
   GObject *popup_error;
   GObject *popup_error_button_ok;
 
+  /* config */
+  config_t *cfg;
+
   /* Add the UI files to builders and check if they opened correctly, else exit */
   if(gtk_builder_add_from_file(builder_main, "../ui/main.ui", &error)   == 0 ||
      gtk_builder_add_from_file(builder_popup, "../ui/popup.ui", &error) == 0
@@ -118,84 +121,240 @@ static void activate(GApplication *app, gpointer user_data) {
     exit(EXIT_FAILURE);
   }
 
-  /* Start declaring UI descriptions */
+  /* =Start declaring UI descriptions= */
   /* builder_main */
-  window                                                 = gtk_builder_get_object(builder_main, "window");
-  window_headerbar                                       = gtk_builder_get_object(builder_main, "window_headerbar");
-  window_headerbar_grid_always_buttonbox_button_select   = gtk_builder_get_object(builder_main, "window_headerbar_grid_always_buttonbox_button_select");
-  window_headerbar_grid_always_buttobox_button_create    = gtk_builder_get_object(builder_main, "window_headerbar_grid_always_buttobox_button_create");
-  window_headerbar_grid_stack_1_buttonbox_cancel         = gtk_builder_get_object(builder_main, "window_headerbar_grid_stack_1_buttonbox_cancel");
-  window_headerbar_grid_stack_1_buttonbox_save           = gtk_builder_get_object(builder_main, "window_headerbar_grid_stack_1_buttonbox_save");
-  window_headerbar_grid_stack_1_buttonbox_set_as_default = gtk_builder_get_object(builder_main, "window_headerbar_grid_stack_1_buttonbox_set_as_default");
-  window_headerbar_grid_stack_2_buttonbox_cancel         = gtk_builder_get_object(builder_main, "window_headerbar_grid_stack_2_buttonbox_cancel");
-  window_headerbar_grid_stack_2_buttonbox_convert        = gtk_builder_get_object(builder_main, "window_headerbar_grid_stack_2_buttonbox_convert");
-  mainmenu_buttonmenu_select_configuration_file          = gtk_builder_get_object(builder_main, "mainmenu_buttonmenu_select_configuration_file");
-  mainmenu_buttonmenu_create_configuration_file          = gtk_builder_get_object(builder_main, "mainmenu_buttonmenu_create_configuration_file");
-  mainmenu_buttonmenu_convert_to_animated_images         = gtk_builder_get_object(builder_main, "mainmenu_buttonmenu_convert_to_animated_images");
-  mainmenu_buttonmenu_clear_history                      = gtk_builder_get_object(builder_main, "mainmenu_buttonmenu_clear_history");
-  mainmenu_buttonmenu_about_info                         = gtk_builder_get_object(builder_main, "mainmenu_buttonmenu_about_info");
-  window_grid_bottom_status_bar                          = gtk_builder_get_object(builder_main, "window_grid_bottom_status_bar");
-  stacks_w.window                                        = window;
-  stacks_w.window_headerbar                              = window_headerbar;
-  stacks_w.window_headerbar_grid_stack                   = gtk_builder_get_object(builder_main, "window_headerbar_grid_stack");
-  stacks_w.window_headerbar_grid_stack_0_grid            = gtk_builder_get_object(builder_main, "window_headerbar_grid_stack_0_grid");
-  stacks_w.window_headerbar_grid_stack_1_buttonbox       = gtk_builder_get_object(builder_main, "window_headerbar_grid_stack_1_buttonbox");
-  stacks_w.window_headerbar_grid_stack_2_buttonbox       = gtk_builder_get_object(builder_main, "window_headerbar_grid_stack_2_buttonbox");
-  stacks_w.body_workbench_stack                          = gtk_builder_get_object(builder_main, "body_workbench_stack");
-  stacks_w.workbench_config_paned                        = gtk_builder_get_object(builder_main, "workbench_config_paned");
-  stacks_w.workbench_convert_paned                       = gtk_builder_get_object(builder_main, "workbench_convert_paned");
-  stacks_w.workbench_home_stack                          = gtk_builder_get_object(builder_main, "workbench_home_stack");
-  stacks_w.workbench_home_stack_empty_history            = gtk_builder_get_object(builder_main, "workbench_home_stack_empty_history");
-  stacks_w.workbench_home_stack_has_history              = gtk_builder_get_object(builder_main, "workbench_home_stack_has_history");
+  window
+    = gtk_builder_get_object(builder_main, "window");
+
+  window_headerbar
+    = gtk_builder_get_object(builder_main, "window_headerbar");
+
+  window_headerbar_grid_always_buttonbox_button_select
+    = gtk_builder_get_object(builder_main, "window_headerbar_grid_always_buttonbox_button_select");
+
+  window_headerbar_grid_always_buttobox_button_create
+    = gtk_builder_get_object(builder_main, "window_headerbar_grid_always_buttobox_button_create");
+
+  window_headerbar_grid_stack_1_buttonbox_cancel
+    = gtk_builder_get_object(builder_main, "window_headerbar_grid_stack_1_buttonbox_cancel");
+
+  window_headerbar_grid_stack_1_buttonbox_save
+    = gtk_builder_get_object(builder_main, "window_headerbar_grid_stack_1_buttonbox_save");
+
+  window_headerbar_grid_stack_1_buttonbox_set_as_default
+    = gtk_builder_get_object(builder_main, "window_headerbar_grid_stack_1_buttonbox_set_as_default");
+
+  window_headerbar_grid_stack_2_buttonbox_cancel
+    = gtk_builder_get_object(builder_main, "window_headerbar_grid_stack_2_buttonbox_cancel");
+
+  window_headerbar_grid_stack_2_buttonbox_convert
+    = gtk_builder_get_object(builder_main, "window_headerbar_grid_stack_2_buttonbox_convert");
+
+  mainmenu_buttonmenu_select_configuration_file
+    = gtk_builder_get_object(builder_main, "mainmenu_buttonmenu_select_configuration_file");
+
+  mainmenu_buttonmenu_create_configuration_file
+    = gtk_builder_get_object(builder_main, "mainmenu_buttonmenu_create_configuration_file");
+
+  mainmenu_buttonmenu_convert_to_animated_images
+    = gtk_builder_get_object(builder_main, "mainmenu_buttonmenu_convert_to_animated_images");
+
+  mainmenu_buttonmenu_clear_history
+    = gtk_builder_get_object(builder_main, "mainmenu_buttonmenu_clear_history");
+
+  mainmenu_buttonmenu_about_info
+    = gtk_builder_get_object(builder_main, "mainmenu_buttonmenu_about_info");
+
+  window_grid_bottom_status_bar
+    = gtk_builder_get_object(builder_main, "window_grid_bottom_status_bar");
+
+  stacks_w.window
+    = window;
+
+  stacks_w.window_headerbar
+    = window_headerbar;
+
+  stacks_w.window_headerbar_grid_stack
+    = gtk_builder_get_object(builder_main, "window_headerbar_grid_stack");
+
+  stacks_w.window_headerbar_grid_stack_0_grid
+    = gtk_builder_get_object(builder_main, "window_headerbar_grid_stack_0_grid");
+
+  stacks_w.window_headerbar_grid_stack_1_buttonbox
+    = gtk_builder_get_object(builder_main, "window_headerbar_grid_stack_1_buttonbox");
+
+  stacks_w.window_headerbar_grid_stack_2_buttonbox
+    = gtk_builder_get_object(builder_main, "window_headerbar_grid_stack_2_buttonbox");
+
+  stacks_w.body_workbench_stack
+    = gtk_builder_get_object(builder_main, "body_workbench_stack");
+
+  stacks_w.workbench_config_paned
+    = gtk_builder_get_object(builder_main, "workbench_config_paned");
+
+  stacks_w.workbench_convert_paned
+    = gtk_builder_get_object(builder_main, "workbench_convert_paned");
+
+  stacks_w.workbench_home_stack
+    = gtk_builder_get_object(builder_main, "workbench_home_stack");
+
+  stacks_w.workbench_home_stack_empty_history
+    = gtk_builder_get_object(builder_main, "workbench_home_stack_empty_history");
+
+  stacks_w.workbench_home_stack_has_history
+    = gtk_builder_get_object(builder_main, "workbench_home_stack_has_history");
+
   /* builder_popup */
-  popup_about_info                                       = gtk_builder_get_object(builder_popup, "popup_about_info");
-  on_clear_history_dialog                                = gtk_builder_get_object(builder_popup, "on_clear_history_dialog");
-  on_clear_history_vbox_buttonbox_button_yes             = G_OBJECT(gtk_button_new_with_label("Yes"));
-  on_clear_history_vbox_buttonbox_button_no              = G_OBJECT(gtk_button_new_with_label("No"));
-  popup_cancel                                           = gtk_builder_get_object(builder_popup, "popup_cancel");
-  popup_cancel_button_yes                                = G_OBJECT(gtk_button_new_with_label("Yes"));
-  popup_cancel_button_no                                 = G_OBJECT(gtk_button_new_with_label("No"));
-  popup_error                                            = gtk_builder_get_object(builder_popup, "popup_error");
-  popup_error_button_ok                                  = G_OBJECT(gtk_button_new_with_label("Ok"));
+  popup_about_info
+    = gtk_builder_get_object(builder_popup, "popup_about_info");
+
+  on_clear_history_dialog
+    = gtk_builder_get_object(builder_popup, "on_clear_history_dialog");
+
+  on_clear_history_vbox_buttonbox_button_yes
+    = G_OBJECT(gtk_button_new_with_label("Yes"));
+
+  on_clear_history_vbox_buttonbox_button_no
+    = G_OBJECT(gtk_button_new_with_label("No"));
+
+  popup_cancel
+    = gtk_builder_get_object(builder_popup, "popup_cancel");
+
+  popup_cancel_button_yes
+    = G_OBJECT(gtk_button_new_with_label("Yes"));
+
+  popup_cancel_button_no
+    = G_OBJECT(gtk_button_new_with_label("No"));
+
+  popup_error
+    = gtk_builder_get_object(builder_popup, "popup_error");
+
+  popup_error_button_ok
+    = G_OBJECT(gtk_button_new_with_label("Ok"));
 
   /* Connect signal handlers to the constructed widgets */
-  g_signal_connect(window, "destroy", G_CALLBACK(gtk_main_quit), NULL);
-  g_signal_connect(window_headerbar_grid_always_buttonbox_button_select, "clicked", G_CALLBACK(on_select_configuration_file), &stacks_w);
-  g_signal_connect(window_headerbar_grid_always_buttobox_button_create, "clicked", G_CALLBACK(on_create_configuration_file), &stacks_w);
+  g_signal_connect(
+      window,
+      "destroy",
+      G_CALLBACK(gtk_main_quit),
+      NULL);
+
+  g_signal_connect(
+      window_headerbar_grid_always_buttonbox_button_select,
+      "clicked",
+      G_CALLBACK(on_select_configuration_file),
+      &stacks_w);
+
+  g_signal_connect(
+      window_headerbar_grid_always_buttobox_button_create,
+      "clicked",
+      G_CALLBACK(on_create_configuration_file),
+      &stacks_w);
 
   struct on_cancel_struct on_cancel_struct_w = {
     .stacks_struct = &stacks_w,
     .popup_cancel_w = popup_cancel
   };
-  g_signal_connect(window_headerbar_grid_stack_1_buttonbox_cancel, "clicked", G_CALLBACK(on_cancel), &on_cancel_struct_w);
-  g_signal_connect(window_headerbar_grid_stack_1_buttonbox_save, "clicked", G_CALLBACK(on_config_save), NULL);
-  g_signal_connect(window_headerbar_grid_stack_1_buttonbox_set_as_default, "clicked", G_CALLBACK(on_config_set_as_default), NULL);
-  g_signal_connect(window_headerbar_grid_stack_2_buttonbox_cancel, "clicked", G_CALLBACK(on_cancel), &on_cancel_struct_w);
-  g_signal_connect(mainmenu_buttonmenu_select_configuration_file, "clicked", G_CALLBACK(on_select_configuration_file), &stacks_w);
-  g_signal_connect(mainmenu_buttonmenu_create_configuration_file, "clicked", G_CALLBACK(on_create_configuration_file), &stacks_w);
-  g_signal_connect(mainmenu_buttonmenu_convert_to_animated_images, "clicked", G_CALLBACK(on_convert_images), &stacks_w);
+  g_signal_connect(
+      window_headerbar_grid_stack_1_buttonbox_cancel,
+      "clicked",
+      G_CALLBACK(on_cancel),
+      &on_cancel_struct_w);
+
+  g_signal_connect(
+      window_headerbar_grid_stack_1_buttonbox_save,
+      "clicked",
+      G_CALLBACK(on_config_save),
+      NULL);
+
+  g_signal_connect(
+      window_headerbar_grid_stack_1_buttonbox_set_as_default,
+      "clicked",
+      G_CALLBACK(on_config_set_as_default),
+      NULL);
+
+  g_signal_connect(
+      window_headerbar_grid_stack_2_buttonbox_cancel,
+      "clicked",
+      G_CALLBACK(on_cancel),
+      &on_cancel_struct_w);
+
+  g_signal_connect(
+      mainmenu_buttonmenu_select_configuration_file,
+      "clicked",
+      G_CALLBACK(on_select_configuration_file),
+      &stacks_w);
+
+  g_signal_connect(
+      mainmenu_buttonmenu_create_configuration_file,
+      "clicked",
+      G_CALLBACK(on_create_configuration_file),
+      &stacks_w);
+
+  g_signal_connect(
+      mainmenu_buttonmenu_convert_to_animated_images,
+      "clicked",
+      G_CALLBACK(on_convert_images),
+      &stacks_w);
+
   struct on_about_info_struct on_about_info_struct_w = {
     .statusbar = window_grid_bottom_status_bar,
     .popup = on_clear_history_dialog
   };
-  g_signal_connect(mainmenu_buttonmenu_clear_history, "clicked", G_CALLBACK(on_clear_history), &on_about_info_struct_w);
-  g_signal_connect(mainmenu_buttonmenu_about_info, "clicked", G_CALLBACK(on_about_info), popup_about_info);
+  g_signal_connect(
+      mainmenu_buttonmenu_clear_history,
+      "clicked",
+      G_CALLBACK(on_clear_history),
+      &on_about_info_struct_w);
 
-  /* Give response IDs */
+  g_signal_connect(
+      mainmenu_buttonmenu_about_info,
+      "clicked",
+      G_CALLBACK(on_about_info),
+      popup_about_info);
+
+
+  /* =Give response IDs= */
   /* config cancel dialog buttons */
-  gtk_dialog_add_action_widget(GTK_DIALOG(on_clear_history_dialog), GTK_WIDGET(on_clear_history_vbox_buttonbox_button_yes), GTK_RESPONSE_YES);
-  gtk_dialog_add_action_widget(GTK_DIALOG(on_clear_history_dialog), GTK_WIDGET(on_clear_history_vbox_buttonbox_button_no), GTK_RESPONSE_NO);
-  gtk_dialog_add_action_widget(GTK_DIALOG(popup_cancel), GTK_WIDGET(popup_cancel_button_yes), GTK_RESPONSE_YES);
-  gtk_dialog_add_action_widget(GTK_DIALOG(popup_cancel), GTK_WIDGET(popup_cancel_button_no), GTK_RESPONSE_NO);
+  gtk_dialog_add_action_widget(
+      GTK_DIALOG(on_clear_history_dialog),
+      GTK_WIDGET(on_clear_history_vbox_buttonbox_button_yes),
+      GTK_RESPONSE_YES);
+
+  gtk_dialog_add_action_widget(
+      GTK_DIALOG(on_clear_history_dialog),
+      GTK_WIDGET(on_clear_history_vbox_buttonbox_button_no),
+      GTK_RESPONSE_NO);
+
+  gtk_dialog_add_action_widget(GTK_DIALOG(popup_cancel),
+      GTK_WIDGET(popup_cancel_button_yes),
+      GTK_RESPONSE_YES);
+
+  gtk_dialog_add_action_widget(GTK_DIALOG(popup_cancel),
+      GTK_WIDGET(popup_cancel_button_no),
+      GTK_RESPONSE_NO);
+
   /* error button */
-  gtk_dialog_add_action_widget(GTK_DIALOG(popup_error), GTK_WIDGET(popup_error_button_ok), GTK_RESPONSE_OK);
+  gtk_dialog_add_action_widget(GTK_DIALOG(popup_error),
+      GTK_WIDGET(popup_error_button_ok),
+      GTK_RESPONSE_OK);
+
 
   /* Do all miscellaneous things for initial setup */
-  gtk_header_bar_set_title(GTK_HEADER_BAR(window_headerbar), "XAWP-gui");
-  gtk_window_set_transient_for(GTK_WINDOW(popup_about_info), GTK_WINDOW(window));
-  gtk_window_set_transient_for(GTK_WINDOW(on_clear_history_dialog), GTK_WINDOW(window));
-  gtk_window_set_transient_for(GTK_WINDOW(popup_cancel), GTK_WINDOW(window));
+  gtk_header_bar_set_title(
+      GTK_HEADER_BAR(window_headerbar), "XAWP-gui");
+
+  gtk_window_set_transient_for(
+      GTK_WINDOW(popup_about_info), GTK_WINDOW(window));
+
+  gtk_window_set_transient_for(
+      GTK_WINDOW(on_clear_history_dialog), GTK_WINDOW(window));
+
+  gtk_window_set_transient_for(
+      GTK_WINDOW(popup_cancel), GTK_WINDOW(window));
+
   formatPath(DEFAULT_CONFIG_PATH, default_config_path);
+
   history_init(&history, HISTORY_DEFAULT_PATH);
 
   /* Now run the program */
@@ -245,9 +404,18 @@ static void on_select_configuration_file(GtkWidget *widget, gpointer data) {
     GtkFileChooser *chooser = GTK_FILE_CHOOSER(nativeChooser);
     filename = gtk_file_chooser_get_filename(chooser);
     verifyDirPath(default_config_path);
-    gtk_header_bar_set_subtitle(GTK_HEADER_BAR(stacks_w->window_headerbar), basename(filename));
-    gtk_stack_set_visible_child(GTK_STACK(stacks_w->body_workbench_stack), GTK_WIDGET(stacks_w->workbench_config_paned));
-    gtk_stack_set_visible_child(GTK_STACK(stacks_w->window_headerbar_grid_stack), GTK_WIDGET(stacks_w->window_headerbar_grid_stack_1_buttonbox));
+
+    gtk_header_bar_set_subtitle(
+        GTK_HEADER_BAR(stacks_w->window_headerbar),
+        basename(filename));
+
+    gtk_stack_set_visible_child(
+        GTK_STACK(stacks_w->body_workbench_stack),
+        GTK_WIDGET(stacks_w->workbench_config_paned));
+
+    gtk_stack_set_visible_child(
+        GTK_STACK(stacks_w->window_headerbar_grid_stack),
+        GTK_WIDGET(stacks_w->window_headerbar_grid_stack_1_buttonbox));
 
     g_free(filename);
   }
@@ -266,29 +434,51 @@ static void on_create_configuration_file(GtkWidget *widget, gpointer data) {
   GtkFileChooserAction action = GTK_FILE_CHOOSER_ACTION_SAVE;
   gint res;
 
-  nativeChooser = gtk_file_chooser_native_new("Save File", GTK_WINDOW(window), action, "_Create", "_Cancel");
+  nativeChooser = gtk_file_chooser_native_new(
+      "Save File",
+      GTK_WINDOW(window),
+      action,
+      "_Create",
+      "_Cancel");
+
   chooser = GTK_FILE_CHOOSER(nativeChooser);
 
   verifyDirPath(default_config_path);
 
   /* Set the default directory it should open by default */
-  gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(nativeChooser), default_config_path);
+  gtk_file_chooser_set_current_folder(
+      GTK_FILE_CHOOSER(nativeChooser),
+      default_config_path);
 
   /* Display overwrite user confirmation when choosing an already existing file */
-  gtk_file_chooser_set_do_overwrite_confirmation(chooser, TRUE);
+  gtk_file_chooser_set_do_overwrite_confirmation(
+      chooser,
+      TRUE);
 
   /* Set the default extension for the file to .conf and put the cursor at the first character */
-  gtk_file_chooser_set_current_name(GTK_FILE_CHOOSER(chooser), ".conf");
+  gtk_file_chooser_set_current_name(
+      GTK_FILE_CHOOSER(chooser),
+      ".conf");
 
   res = gtk_native_dialog_run(GTK_NATIVE_DIALOG(nativeChooser));
+
   if(res == GTK_RESPONSE_ACCEPT) {
     char *filename;
 
     filename = gtk_file_chooser_get_filename(chooser);
+
     /* TODO: use this info for the next function call(s) to create a config file */
-    gtk_header_bar_set_subtitle(GTK_HEADER_BAR(stacks_w->window_headerbar), basename(filename));
-    gtk_stack_set_visible_child(GTK_STACK(stacks_w->body_workbench_stack), GTK_WIDGET(stacks_w->workbench_config_paned));
-    gtk_stack_set_visible_child(GTK_STACK(stacks_w->window_headerbar_grid_stack), GTK_WIDGET(stacks_w->window_headerbar_grid_stack_1_buttonbox));
+    gtk_header_bar_set_subtitle(
+        GTK_HEADER_BAR(stacks_w->window_headerbar),
+        basename(filename));
+
+    gtk_stack_set_visible_child(
+        GTK_STACK(stacks_w->body_workbench_stack),
+        GTK_WIDGET(stacks_w->workbench_config_paned));
+
+    gtk_stack_set_visible_child(
+        GTK_STACK(stacks_w->window_headerbar_grid_stack),
+        GTK_WIDGET(stacks_w->window_headerbar_grid_stack_1_buttonbox));
 
     g_free(filename);
   }
@@ -299,58 +489,38 @@ static void on_create_configuration_file(GtkWidget *widget, gpointer data) {
 }
 
 static void on_cancel(GtkWidget *widget, gpointer data) {
-  struct on_cancel_struct *on_cancel_struct_w = (struct on_cancel_struct* )data;
-  /* If the respone ID is YES, return to home, else continue to edit the config */
-  //TODO: pass the actual popup
+
+  struct on_cancel_struct *on_cancel_struct_w =
+    (struct on_cancel_struct* )data;
+
+  /*
+   * If the respone ID is YES, return to home, else continue to edit the config
+   *
+   * TODO: pass the actual popup
+   */
   gtk_widget_show_all(GTK_WIDGET(on_cancel_struct_w->popup_cancel_w));
+
   gint response = gtk_dialog_run(GTK_DIALOG(on_cancel_struct_w->popup_cancel_w));
   if(response == GTK_RESPONSE_YES) {
-    gtk_header_bar_set_subtitle(GTK_HEADER_BAR(on_cancel_struct_w->stacks_struct->window_headerbar), "");
-    gtk_stack_set_visible_child(GTK_STACK(on_cancel_struct_w->stacks_struct->body_workbench_stack), GTK_WIDGET(on_cancel_struct_w->stacks_struct->workbench_home_stack));
-    gtk_stack_set_visible_child(GTK_STACK(on_cancel_struct_w->stacks_struct->window_headerbar_grid_stack), GTK_WIDGET(on_cancel_struct_w->stacks_struct->window_headerbar_grid_stack_0_grid));
+    gtk_header_bar_set_subtitle(
+        GTK_HEADER_BAR(on_cancel_struct_w->stacks_struct->window_headerbar),
+        "");
+
+    gtk_stack_set_visible_child(
+        GTK_STACK(on_cancel_struct_w->stacks_struct->body_workbench_stack),
+        GTK_WIDGET(on_cancel_struct_w->stacks_struct->workbench_home_stack));
+
+    gtk_stack_set_visible_child(
+        GTK_STACK(on_cancel_struct_w->stacks_struct->window_headerbar_grid_stack),
+        GTK_WIDGET(on_cancel_struct_w->stacks_struct->window_headerbar_grid_stack_0_grid));
   }
+
   gtk_widget_hide(GTK_WIDGET(on_cancel_struct_w->popup_cancel_w));
 }
 
 static void on_config_save(GtkWidget *widget, gpointer data) {
   struct stacks *stacks_w = (struct stacks* )data;
 
-  /* Save a XAWP configuration with all it's values */
-
-  //fprintf(fp, "### %s - generated with XAWP-gui\n", basename(filename));
-  //fprintf(fp, "# v%s\n", VERSION);
-  //fprintf(fp, "#\n");
-  //fprintf(fp, "#  /$$   /$$  /$$$$$$  /$$      /$$ /$$$$$$$\n");
-  //fprintf(fp, "# | $$  / $$ /$$__  $$| $$  /$ | $$| $$__  $$\n");
-  //fprintf(fp, "# |  $$/ $$/| $$  \\ $$| $$ /$$$| $$| $$  \\ $$\n");
-  //fprintf(fp, "#  \\  $$$$/ | $$$$$$$$| $$/$$ $$ $$| $$$$$$$/\n");
-  //fprintf(fp, "#   >$$  $$ | $$__  $$| $$$$_  $$$$| $$____/\n");
-  //fprintf(fp, "#  /$$/\\  $$| $$  | $$| $$$/ \\  $$$| $$\n");
-  //fprintf(fp, "# | $$  \\ $$| $$  | $$| $$/   \\  $$| $$\n");
-  //fprintf(fp, "# |__/  |__/|__/  |__/|__/     \\__/|__/\n");
-  //fprintf(fp, "#\n");
-  //fprintf(fp, "# See wiki page for more info:\n");
-  //fprintf(fp, "# https://github.com/TheRealOne78/XAWP/wiki\n");
-  //fprintf(fp, "\n");
-  //fprintf(fp, "### Path to images directory\n");
-  //fprintf(fp, "# It needs to contain every frame xawp should display\n");
-  //fprintf(fp, "path = \"%s\"\n", path);
-  //fprintf(fp, "\n");
-  //fprintf(fp, "### Time\n");
-  //fprintf(fp, "# Set time to pause between 2 frames\n");
-  //fprintf(fp, "time = %lf\n", time);
-  //fprintf(fp, "\n");
-  //fprintf(fp, "### Debug\n");
-  //fprintf(fp, "# If true, debug info will start display\n");
-  //fprintf(fp, "debug = %s\n", debug);
-  //fprintf(fp, "\n");
-  //fprintf(fp, "### Static Image Wallpaper\n");
-  //fprintf(fp, "# If uncommented, XAWP will set the wallpaper and exit\n");
-
-  //if(static_wallpaper_bool)
-  //  fprintf(fp, "static-wallpaper = \"%s\"\n", static_wallpaper);
-  //else
-  //  fprintf(fp, "#static-wallpaper = \"%s\"\n", static_wallpaper);
 
 //TODO
 }

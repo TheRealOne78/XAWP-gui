@@ -28,3 +28,7 @@
 #ifndef VERSION
   #define VERSION "0.0.2"
 #endif
+
+#ifndef VERSION_MAX
+  #define VERSION_MAX 12
+#endif
